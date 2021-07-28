@@ -1,0 +1,29 @@
+{
+  "name": "whatsapp-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "directories": {
+    "lib": "lib"
+  },
+  "dependencies": {
+    "typescript": "^4.3.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": " \"echo \\\"Error: no test specified\\\" && exit 1\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rayyreall/Whatsapp_Bot.git"
+  },
+  "keywords": [
+    "Whatsapp-bot"
+  ],
+  "author": "I`am Ra",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rayyreall/Whatsapp_Bot/issues"
+  },
+  "homepage": "https://github.com/rayyreall/Whatsapp_Bot#readme"
+}
