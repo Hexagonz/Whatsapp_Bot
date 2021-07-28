@@ -1,4 +1,3 @@
-import { Main } from "./main";
 import { WAChatUpdate, WAMessage, WAGroupMetadata, WAContact } from "@adiwajshing/baileys";
 import { Validation } from './validasi';
 import { Validasi, HandlingMessage,  } from "../typings";
@@ -60,7 +59,7 @@ export class HandlerMsg extends Validation {
 				isQuotedDokumen
 			}
 			return Format
-		} catch (err: any) {
+		} catch (err: unknown | any) {
 			if (err.match(/this.isZero/gi)) return
 			console.log(err)
 		}
