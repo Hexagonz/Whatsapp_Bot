@@ -7,7 +7,7 @@
     "lib": "lib"
   },
   "dependencies": {
-    "@adiwajshing/baileys": "^3.5.1",
+    "@adiwajshing/baileys": "github:adiwajshing/baileys",
     "canvas": "^2.8.0",
     "chalk": "^4.1.1",
     "cheerio": "^1.0.0-rc.10",
