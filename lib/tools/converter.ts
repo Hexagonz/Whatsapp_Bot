@@ -52,12 +52,13 @@ export function Tomp3 (input: string) {
 	return new Promise(async (resolve, reject) => {
 		const output: string = `./lib/storage/temp/${Date.now()}.mp3`
 		exec(`ffmpeg -i ${input} -b:a 192K -vn ${output}`, function (error: ExecException | null) {
-	        if(error) {
-	        if (fs.exifSync(input)) fs.unlinkSync(input)
-		reject(error)
-		} else {
-	        if (fs.existsSync(output)) resolve(output)
-	     }
-	   }
-	})
-}
+			if(error) {
+				if (fs.exifSync(input)) fs.unlinkSync(input)
+				reject(error)
+			} else {
+				if (fs.exifSync(input)) fs.unlinkSync(input)
+				if (fs.existsSync(output)) resolve(output)
+			}
+		}
+		     })
+	}
