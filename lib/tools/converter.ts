@@ -62,3 +62,17 @@ export function Tomp3 (input: string) {
 		}
 		     })
 	}
+export function Tocute (input: string) {
+	return new Promise(async (resolve, reject) => {
+		const output: string = `./lib/storage/temp/${Date.now()}.mp3`
+		exec(`ffmpeg -i ${input} -af atempo=3/4,asetrate=44500*4/3 ${output}`, function (error: ExecException | null) {
+	               if(error) {
+	                      if (fs.exifSync(input)) fs.unlinkSync(input)
+		              reject(error)
+		       } else {
+                              if (fs.exifSync(input)) fs.unlinkSync(input)
+	                      if (fs.existsSync(output)) resolve(output)
+	               }
+		}
+	             })
+        }
