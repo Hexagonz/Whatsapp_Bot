@@ -7,7 +7,7 @@
     "lib": "lib"
   },
   "dependencies": {
-    "@adiwajshing/baileys": "git+https://github.com/FaizBastomi/Baileys.git",
+    "@adiwajshing/baileys": "^3.5.1",
     "canvas": "^2.8.0",
     "chalk": "^4.1.1",
     "cheerio": "^1.0.0-rc.10",
