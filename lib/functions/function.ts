@@ -12,12 +12,3 @@ export async function Buffer(Url: string): Promise <Buffer> {
 	}).buffer()
 	return data
 }
-export function RandomName (jumlah: number): string {
-	const result: string[]= []
-	const karakter: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-	let Total: number = karakter.length;
-	for (let i: number = 0; i < jumlah; i++) {
-		result.push(karakter.charAt(Math.floor(Math.random() * Total)))
-	}
-	return result.join('');
-}

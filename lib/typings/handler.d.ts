@@ -15,17 +15,14 @@ export interface  HandlingMessage {
 	media: WAMessage | null;
 	sender: string | null | undefined
 	mess: proto.WebMessageInfo | undefined
-	command: string;
-	args: string[];
-	pushname: string;
-	groupName: string | null;
+	//pushname: string;
 	groupMetadata: WAGroupMetadata | null
-	groupId: string | null;
 	botNumber: string;
 	isBot: boolean | undefined;
 	fromMe: boolean | undefined | null;
 	isOwner: boolean;
-	isCmd: boolean;
+	bot: any;
+	user: any
 	isMedia: boolean;
 	isGambar: boolean;
 	isVideo: boolean;

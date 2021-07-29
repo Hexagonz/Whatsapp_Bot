@@ -1,12 +1,7 @@
-export interface Response {
-	command: string;
-	prefix: string;
-	tag: string
-}
-export declare let Global: Response["command"]
+import { Command } from '../src/command';
+//type CommandType = Command
 
-export declare global {
-	var command: string;
-	var prefix: string;
-	var tag: string;
+declare global {
+  var CMD: Command;
+  var prefix: string | string[]
 }

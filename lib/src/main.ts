@@ -5,22 +5,32 @@ import { HandlerMsg } from "./handler";
 import { HandlingMessage} from "../typings";
 import * as fs from "fs";
 import { isUrl, Buffer } from "../functions/function"
+import { Command } from "./command"
 
-let menu: any = []
+globalThis.prefix = '#'
 
+globalThis.CMD = new Command(globalThis.prefix)
+
+import * as cmd from "./cmd"
+console.log(cmd)
 
 export class Main  {
 	public client: WAConnection = new WAConnection();
 	public message: HandlerMsg = new HandlerMsg(this.client)
+  //static CMD: Command = new Command ()
 	constructor() {
 	}
 	public Response () {
 		this.client.on("chat-update", async (chats: WAChatUpdate) => {
 			const data: HandlingMessage  | undefined= await  this.message.handling(chats)
 			if (data == undefined) return
-			const { message, command, isOwner, args, from, mess } = data
+			await CMD.validate(data, this.client)
+		//	const { message, command, isOwner, args, from, mess } = data
 		})
 	}
+	
+
+	
 	public async sendText(from: string, text: string): Promise <void> {
 		return void await this.client.sendMessage(from, text, MessageType.text)
 	}
@@ -89,4 +99,3 @@ export class Main  {
 		}
 	}
 }
-
