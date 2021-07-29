@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosResponse, AxiosPromise } from "axios";
 import cheerio, { CheerioAPI} from "cheerio";
 import FormData from "form-data";
 import * as fs from "fs";
@@ -44,7 +44,7 @@ export async function ToVideo (path: string): Promise <{ status: number, data: s
 	})
 }
 
-export async function pngToWebp (url: string): Promise <{ status: number, data: string } | Error> {
+export async function pngToWebp (url: string): Promise <{ status: number, hasil: string } | Error> {
 	return new Promise(async (resolve, reject) => {
 		const getData: AxiosResponse = await axios({
 		  method: "GET",
@@ -59,19 +59,19 @@ export async function pngToWebp (url: string): Promise <{ status: number, data: 
                   form.append("file", file);
                   form.append("token", token);
                   form.append("convert", "Convert PNG to WebP!");
-                    const postData: AxiosResponse = axios({
+                    const postData: AxiosResponse = await axios({
                       method: "POST",
                       url: actionpost,
                       data: form,
                       headers: {
-                        "Content-Type": `multipart/form-data; boundary=${form._boundary}`
+                        "Content-Type": `multipart/form-data; boundary=${form.getBoundary()}`
                       } 
                 }) 
 		if (postData.status !== 200) reject(new Error(`Error status code : ${postData.status}`))
 		const ch: CheerioAPI = cheerio.load(postData.data)
-		const result: { status: number, data: string } = {
-			status: data.status,
-			hasil: "https:" + ch('div[id="output"]').find("p").first().find("img").attr("src");
+		const result: { status: number, hasil: string } = {
+			status: postData.status,
+			hasil: "https:" + ch('div[id="output"]').find("p").first().find("img").attr("src")
 		}
 		resolve(result)
 	})
