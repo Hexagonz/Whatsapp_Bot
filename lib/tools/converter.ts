@@ -48,3 +48,16 @@ export async function toVideoV2 (input: string): Promise <string> {
 		if (fs.existsSync(output)) resolve(output)
 	})
 }
+export function Tomp3 (input: string) {
+	return new Promise(async (resolve, reject) => {
+		const output: string = `./lib/storage/temp/${Date.now()}.mp3`
+		exec(`ffmpeg -i ${input} -b:a 192K -vn ${output}`, function (error: ExecException | null) {
+	        if(error) {
+	        if (fs.exifSync(input)) fs.unlinkSync(input)
+		reject(error)
+		} else {
+	        if (fs.existsSync(output)) resolve(output)
+	     }
+	   }
+	})
+}
