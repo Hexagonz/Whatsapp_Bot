@@ -76,7 +76,6 @@ export class Converter {
 			})
 		}, { noPrefix: false })
 	}
-}
 	protected async toCUTE () {
 		globalThis.CMD.on("converter|tocute", "tocute", async (res: WAConnection, data:  Commands) => {
 			const { media, isQuotedAudio, from, mess, isAudio, sender } = data
