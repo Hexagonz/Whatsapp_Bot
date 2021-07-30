@@ -12,6 +12,7 @@ export class Converter {
 		 this.toMP3()
 		 this.Sticker()
 		 this.ToVideo()
+                 this.toCUTE()
 	}
 	protected async Sticker () {
 		globalThis.CMD.on("converter|sticker", ["sticker", "s", "stiker"], async (res: WAConnection, data: Commands) => {
