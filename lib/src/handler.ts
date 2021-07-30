@@ -1,6 +1,9 @@
 import { WAChatUpdate, WAMessage, WAGroupMetadata, WAContact, WAGroupParticipant } from "@adiwajshing/baileys";
 import { Validation } from './validasi';
 import { Validasi, HandlingMessage,  } from "../typings";
+import moment from "moment-timezone";
+import { getPRefix } from "../plugins";
+
 
 export class HandlerMsg extends Validation {
 	public async handling (chats: WAChatUpdate): Promise <HandlingMessage | undefined> {
@@ -23,6 +26,10 @@ export class HandlerMsg extends Validation {
 			const isMedia: boolean =  (type === 'imageMessage' || type === 'videoMessage');
 			const isGambar: boolean = (type === "imageMessage");
 			const isVideo: boolean = (type === "videoMessage");
+			const isAudio: boolean = (type === "audioMessage");
+			const Jam: string = moment(new Date()).format("LLLL");
+			const command: string =  body.toLowerCase().split(/ +/g)[0] || "";
+			const Prefix: string = getPRefix(sender, command)
 			const isQuotedSticker: boolean = type === 'extendedTextMessage' && content.includes('stickerMessage');
 			const isQuotedImage: boolean = type === 'extendedTextMessage' && content.includes('imageMessage');
 			const isQuotedVideo: boolean = type === 'extendedTextMessage' && content.includes('videoMessage');
@@ -34,13 +41,17 @@ export class HandlerMsg extends Validation {
 				bot,
 				user,
 				groupMetadata,
+				pushname,
 				botNumber,
 				isBot,
 				fromMe,
 				isOwner,
+				Jam,
+				Prefix,
 				isMedia,
 				isGambar,
 				isVideo,
+				isAudio,
 				isQuotedSticker,
 				isQuotedImage,
 				isQuotedVideo,

@@ -9,10 +9,10 @@ import { Command } from "./command";
 import * as ts from "typescript";
 import util from "util"
 import {  UserHandler } from "../messages";
+import { Detector } from "./detector"
 
-globalThis.prefix = ["#", ".", "!", "$"]
 
-globalThis.CMD = new Command(globalThis.prefix)
+
 let Public: boolean = false
 
 
@@ -20,6 +20,7 @@ export class Main  {
 	public client: WAConnection = new WAConnection();
 	public message: HandlerMsg = new HandlerMsg(this.client);
 	private Respon: UserHandler = new UserHandler();
+	protected detector: Detector
 	constructor() {
 	}
 	public Response () {
@@ -28,7 +29,11 @@ export class Main  {
 			if (data == undefined) return;
 			if (!data.isOwner || Public) return;
 			if (data.fromMe) return;
-			this.Respon.sendData
+			this.detector = new Detector(this.client, data)
+			this.detector.Handling()
+			globalThis.prefix = data.Prefix
+			globalThis.CMD = new Command(globalThis.prefix)
+			this.Respon.sendData()
 			CMD.on("owner|=>", /(?:)/, async (client: WAConnection, res: Commands ) => {
 				const convert: string = ts.transpile(`(async () => { ${res._text}})()`)
 				const send: string = util.format(eval(convert))

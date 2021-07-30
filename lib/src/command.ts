@@ -1,7 +1,7 @@
 import { WAConnection, WAMessage } from "@adiwajshing/baileys";
 import CMDError from "./CmdError";
 import { HandlingMessage } from "../typings"
-import chalk from "chalk"
+import chalk from "chalk";
 
 
 
@@ -54,7 +54,7 @@ export class Command {
     return new Promise(async(resolve, reject) => {
           try {
             this.client = client
-            const { body, groupMetadata, isOwner, bot, user } = data
+            const { body, isOwner, bot, user, sender, groupMetadata, fromMe, pushname, Jam, Prefix } = data
             let usedPrefix: any
             for (const eventName in this.events) {
               const event = this.events[eventName]
@@ -70,8 +70,8 @@ export class Command {
                 let [command, ...args] = _text.split(' ')
                 args = args || []
                 let _args: string[] = _text.split(' ').slice(1)
-                let text = _args.join(' ')
-                let isCmd = this.getCmd(command, event.pattern)
+                let text: string = _args.join(' ')
+                let isCmd: boolean = this.getCmd(command, event.pattern)
                 if (!isCmd) continue
                 if (event.owner && !isOwner) {
                   continue
@@ -87,8 +87,7 @@ export class Command {
                 } catch(err) {
                   reject(new CMDError(err, event))
                 } finally {
-                 console.log(event.name.split("|")[1])
-                  
+					console.log(chalk.keyword('red')("\x1b[1;31m~\x1b[1;37m>"), chalk.keyword('blue')(`[\x1b[1;32m${chalk.hex('#009940').bold('RECORD')}]`), chalk.red.bold("\x1b[1;31m=\x1b[1;37m>"), chalk.cyan('\x1bmSTATUS :\x1b'), chalk.hex('#fffb00')(fromMe ? "SELF": "PUBLIK"), chalk.greenBright('[COMMAND]'), chalk.keyword('red')("\x1b[1;31m~\x1b[1;37m>"), chalk.blueBright(event.name.split("|")[1]), chalk.hex('#f7ef07')(`[${args?.length}]`), chalk.red.bold("\x1b[1;31m=\x1b[1;37m>"), chalk.hex('#26d126')('[PENGIRIM]'), chalk.hex('#f505c1')(pushname), chalk.hex('#ffffff')(`(${sender?.replace(/@s.whatsapp.net/i, '')})`), chalk.greenBright('IN'), chalk.hex('#0428c9')(`${groupMetadata.subject}`), chalk.keyword('red')("\x1b[1;31m~\x1b[1;37m>"), chalk.hex('#f2ff03')('[DATE] =>'), chalk.greenBright(Jam.split(' GMT')[0]))
                 }
                 break
               }
