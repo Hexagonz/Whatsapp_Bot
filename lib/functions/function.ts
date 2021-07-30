@@ -12,3 +12,18 @@ export async function Buffer(Url: string): Promise <Buffer> {
 	}).buffer()
 	return data
 }
+export function Tunggu (ms: number) {
+	return new Promise (resolve => setTimeout(resolve, ms))
+}
+export function Runtime(seconds: number): string {
+	seconds = Number(seconds);
+	var day = Math.floor(seconds / (3600 * 24));
+	var hours = Math.floor(seconds % (3600 * 24) / 3600);
+	var minutes = Math.floor(seconds % 3600 / 60);
+	var second = Math.floor(seconds % 60);
+	var dDisplay = day > 0 ? day + (day == 1 ? " Hari " : " hari ") : "";
+	var hDisplay = hours > 0 ? hours + (hours == 1 ? " Jam " : " jam ") : "";
+	var mDisplay = minutes > 0 ? minutes + (minutes == 1 ? " Menit " : " menit ") : "";
+	var sDisplay = second  > 0 ? second  + (second  == 1 ? " Detik" : " detik") : "";
+	return dDisplay + hDisplay + mDisplay + sDisplay;
+}

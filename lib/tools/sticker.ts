@@ -5,7 +5,7 @@ import { createExif, Sticker } from "wa-sticker-formatter";
 import { Triggered } from "."
 
 
-export async function CreateSticker (input: string, wm?: string): Promise <string | Buffer | Error> {
+export async function CreateSticker (input: string, wm?: string): Promise <string | Error> {
 	return new Promise(async (resolve, reject) => {
 		if (/^(mp4|gif)$/i.test(input.split(".")[2])) {
 			const output: string =  `./lib/storage/temp/${Date.now()}.webp`;
@@ -21,13 +21,14 @@ export async function CreateSticker (input: string, wm?: string): Promise <strin
 			})
 			.on("end", async function () {
 				if (fs.existsSync(input)) fs.unlinkSync(input)
-				if (fs.existsSync(exifPath + ".exif")) await createExif(`${wm}`, "", exifPath)
+				if (!fs.existsSync(exifPath + ".exif")) await createExif(`${wm}`, "", exifPath)
 				exec(`webpmux -set exif ${exifPath}.exif ${output} -o ${output}`, function (error: ExecException | null) {
 					if (error) {
 						if (fs.existsSync(exifPath + ".exif") && typeof wm == "string") fs.unlinkSync(exifPath + ".exif");
 						if (fs.existsSync(output)) fs.unlinkSync(output);
 						reject(error)
 					} else {
+						if (fs.existsSync(exifPath + ".exif") && typeof wm == "string") fs.unlinkSync(exifPath + ".exif");
 						if (fs.existsSync(output)) resolve(output)
 					}
 				})
@@ -37,21 +38,24 @@ export async function CreateSticker (input: string, wm?: string): Promise <strin
 			.save(output)
 		} else if (/^(webp)$/i.test(input.split(".")[2])) {
 			const exifPath: string = typeof wm == "string" ? `./lib/storage/exif/${Date.now()}` : `./lib/storage/exif/Ra_default_exif`;
-			if (fs.existsSync(exifPath + ".exif")) await createExif(wm || "RA BOT", "", exifPath)
+			if (!fs.existsSync(exifPath + ".exif")) await createExif(wm || "RA BOT", "", exifPath)
 			exec(`webpmux -set exif ${exifPath}.exif ${input} -o ${input}`, async function (error: ExecException | null) {
 				if (error) {
 					if (fs.existsSync(exifPath + ".exif") && typeof wm == "string") fs.unlinkSync(exifPath + ".exif");
 					if (fs.existsSync(input)) fs.unlinkSync(input);
 					reject(error)
 				} else {
+					if (fs.existsSync(exifPath + ".exif") && typeof wm == "string") fs.unlinkSync(exifPath + ".exif");
 					if (fs.existsSync(input)) resolve(input)
 				}
 			})
 		} else {
+			const outpath: string = `./lib/storage/temp/${Date.now()}.webp`
 			const sticker: Sticker = new Sticker(input, { crop: true,  pack: typeof wm === "string" ? wm : "RA BOT", author: " "})
 			await sticker.build()
 			const output: Buffer = await sticker.get()
-			resolve(output)
+			await fs.writeFileSync(outpath, output)
+			if (fs.existsSync(outpath)) resolve(outpath)
 		}
 	})
 }

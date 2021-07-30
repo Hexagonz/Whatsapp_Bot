@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { exec } from "child_process";
+import { exec, ExecException } from "child_process";
 import { promisify } from "util";
 import { loadImage, createCanvas, Image, Canvas, NodeCanvasRenderingContext2D } from "canvas";
 import GIFEncoder from "gifencoder";
@@ -48,16 +48,31 @@ export async function toVideoV2 (input: string): Promise <string> {
 		if (fs.existsSync(output)) resolve(output)
 	})
 }
-export function Tomp3 (input: string) {
+export async function Tomp3 (input: string): Promise <string | Error>{
 	return new Promise(async (resolve, reject) => {
 		const output: string = `./lib/storage/temp/${Date.now()}.mp3`
 		exec(`ffmpeg -i ${input} -b:a 192K -vn ${output}`, function (error: ExecException | null) {
-	        if(error) {
-	        if (fs.exifSync(input)) fs.unlinkSync(input)
-		reject(error)
-		} else {
-	        if (fs.existsSync(output)) resolve(output)
-	     }
-	   }
+			if(error) {
+				if (fs.existsSync(input)) fs.unlinkSync(input)
+				reject(error)
+			} else {
+				if (fs.existsSync(input)) fs.unlinkSync(input)
+				if (fs.existsSync(output)) resolve(output)
+			}
+		})
+	})
+}
+export async function Tocute (input: string): Promise <string | Error> {
+	return new Promise(async (resolve, reject) => {
+		const output: string = `./lib/storage/temp/${Date.now()}.mp3`;
+		exec(`ffmpeg -i ${input} -af atempo=3/4,asetrate=44500*4/3 ${output}`, function (error: ExecException | null) {
+			if(error) {
+				if (fs.existsSync(input)) fs.unlinkSync(input)
+				reject(error)
+			} else {
+				if (fs.existsSync(input)) fs.unlinkSync(input)
+				if (fs.existsSync(output)) resolve(output)
+			}
+		})
 	})
 }

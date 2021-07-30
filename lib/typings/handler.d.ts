@@ -15,14 +15,13 @@ export interface  HandlingMessage {
 	media: WAMessage | null;
 	sender: string | null | undefined
 	mess: proto.WebMessageInfo | undefined
-	//pushname: string;
 	groupMetadata: WAGroupMetadata | null
 	botNumber: string;
 	isBot: boolean | undefined;
 	fromMe: boolean | undefined | null;
 	isOwner: boolean;
 	bot: any;
-	user: any
+	user: any;
 	isMedia: boolean;
 	isGambar: boolean;
 	isVideo: boolean;
@@ -31,4 +30,53 @@ export interface  HandlingMessage {
 	isQuotedVideo: boolean;
 	isQuotedAudio: boolean;
 	isQuotedDokumen: boolean
+}
+export declare class Commands {
+	args: string[];
+	_args: string[];
+	text: string;
+	command: string;
+	_text: string;
+	match: any;
+	from: string;
+	message: proto.IFutureProofMessage | undefined;
+	isGroupMsg: boolean;
+	type: string;
+	quotedType: string[] | null;
+	typeQuoted: string;
+	quotedMsg: proto.IContextInfo | null | undefined;
+	bodyQuoted: string | null | undefined;
+	bodyButton: string | null | undefined;
+	body: string | null | undefined;
+	media: WAMessage | null;
+	sender: string | null | undefined
+	mess: proto.WebMessageInfo | undefined;
+	bot: isBot;
+	user: isUser;
+	groupMetadata: WAGroupMetadata | null
+	botNumber: string;
+	isBot: boolean | undefined;
+	fromMe: boolean | undefined | null;
+	isOwner: boolean;
+	isMedia: boolean;
+	isGambar: boolean;
+	isVideo: boolean;
+	isQuotedSticker: boolean;
+	isQuotedImage: boolean;
+	isQuotedVideo: boolean;
+	isQuotedAudio: boolean;
+	isQuotedDokumen: boolean;
+}
+
+interface isBOT {
+	jid: string;
+	id: string;
+	isAdmin: boolean;
+	isSuperAdmin: boolean
+}
+interface isUser {
+	jid: string;
+	id: string;
+	isAdmin: boolean;
+	isSuperAdmin: boolean
 }

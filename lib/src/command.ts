@@ -32,7 +32,6 @@ export class Command {
   }
   
   public on(eventName: string, pattern, callback: any, _init: Init = {}) {
-    console.log(chalk.red('[CMD]'), chalk.cyan(`Re${this.events[eventName] ? '- re': ''}gister command: ${eventName}`))
     if (!this.events[eventName]) this.events[eventName] = {
       name: eventName,
       pattern,
@@ -60,8 +59,8 @@ export class Command {
             for (const eventName in this.events) {
               const event = this.events[eventName]
               if (!event.enabled && !isOwner) continue
-              const prefix = this.getPrefix(event)
-              const match = this.getMatch(body, prefix)
+              const prefix: string = this.getPrefix(event)
+              const match: (RegExp | any[])[] = this.getMatch(body, prefix)
               if (event.noPrefix || !event.pattern) {
                 if (await event.callback(client, { match, ...data })) continue
               }
@@ -88,7 +87,7 @@ export class Command {
                 } catch(err) {
                   reject(new CMDError(err, event))
                 } finally {
-                  console.log(event)
+                 console.log(event.name.split("|")[1])
                   
                 }
                 break
@@ -101,21 +100,21 @@ export class Command {
 
   }
   private getCmd(s: string | null, pattern?: any) {
-       const isCmd = pattern instanceof RegExp ? // RegExp Mode?
+       const isCmd: boolean = pattern instanceof RegExp ? 
             pattern.test(s) :
-            Array.isArray(pattern) ? // Array?
-              pattern.some(cmd => cmd instanceof RegExp ? // RegExp in Array?
+            Array.isArray(pattern) ?
+              pattern.some(cmd => cmd instanceof RegExp ? 
                 cmd.test(s) :
                 cmd === s
               ) :
-              typeof pattern === 'string' ? // String?
+              typeof pattern === 'string' ? 
                 pattern === s :
                 false
        return isCmd
   }
   
   public getPrefix(event) {
-    return event.prefix ? event.prefix  : this.prefix ? this.prefix : this._prefix // Default
+    return event.prefix ? event.prefix  : this.prefix ? this.prefix : this._prefix 
   }
   
   
@@ -138,6 +137,4 @@ export class Command {
   private str2Regex(s: string): string {
      return s.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&')
   }
-  
-  
 }

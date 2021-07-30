@@ -1,4 +1,4 @@
-import { WAChatUpdate, WAMessage, WAGroupMetadata, WAContact } from "@adiwajshing/baileys";
+import { WAChatUpdate, WAMessage, WAGroupMetadata, WAContact, WAGroupParticipant } from "@adiwajshing/baileys";
 import { Validation } from './validasi';
 import { Validasi, HandlingMessage,  } from "../typings";
 
@@ -13,23 +13,13 @@ export class HandlerMsg extends Validation {
 			const contacts: string | WAContact | any = mess?.key.fromMe ? this.client.user.jid : this.client.contacts[sender || ""] || { notify: sender?.replace(/@.+/, "")};
 			const content: string = JSON.stringify(message?.message);
 			const pushname: string = mess?.key.fromMe ? this.client.user.name : contacts?.notify || contacts.vname || contacts.name || "Tidak Terdeteksi";
-
-		/*	const command: string = body?.toLowerCase().split(/ +/g)[0] || "";
-			const args: string[]  = body?.split(" ") || [""];
-			let  groupName: string | null = null
-			let groupId: string | null =  null
-			if (groupMetadata !== null) {
-				groupName = isGroupMsg ? groupMetadata?.subject : "";
-				groupId =    isGroupMsg ? groupMetadata.id : "";
-			}*/
 			const fromMe: boolean | undefined | null = mess?.key ? mess.key.fromMe : false
 			const isBot: boolean | undefined = mess?.key ? mess.key.id?.startsWith("3EB0") : false
 			const botNumber: string = this.client.user.jid;
-	    const bot = isGroupMsg ? groupMetadata.participants.find(v=> v.jid === this.client.user.jid) : {}
-	    const user = isGroupMsg ? groupMetadata.participants.find(v=> v.jid === this.client.user.jid) : {}
+			const bot: WAGroupParticipant | {} = isGroupMsg ? groupMetadata.participants.find(v=> v.jid === this.client.user.jid) : {}
+			const user: WAGroupParticipant | {} = isGroupMsg ? groupMetadata.participants.find(v=> v.jid === this.client.user.jid) : {}
 			const ownerNumber: string[] =  ['6282149344210@s.whatsapp.net', '33753045534@s.whatsapp.net', '79054685580@s.whatsapp.net', botNumber]
 			const isOwner: boolean = ownerNumber.includes(sender || "");
-	//		const isCmd: boolean = body?.startsWith(".") ? true : false;
 			const isMedia: boolean =  (type === 'imageMessage' || type === 'videoMessage');
 			const isGambar: boolean = (type === "imageMessage");
 			const isVideo: boolean = (type === "videoMessage");
