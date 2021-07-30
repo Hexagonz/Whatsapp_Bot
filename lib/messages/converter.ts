@@ -1,10 +1,10 @@
 import { WAConnection, MessageType } from "@adiwajshing/baileys";
 import { Commands } from "../typings";
-import { Tomp3, CreateSticker, toVideoV2 } from "../tools";
+import { Tomp3, Tocute, CreateSticker, toVideoV2 } from "../tools";
 import { Tunggu, Buffer } from "../functions/function";
 import { ToVideo } from "../routers/api"
 import * as fs from "fs";
-import { IndTunggu,  IndBukanVid,  IndToVid  } from "../lang/ind";
+import { IndTunggu,  IndBukanVid,  IndToVid, IndBukanAud, IndToCute } from "../lang/ind";
 
 export class Converter {
 	constructor() {}
@@ -64,6 +64,28 @@ export class Converter {
 			await Tomp3(input).then(async (result: string | Error) => {
 				if (typeof result !== "string") {
 					const Respon: string | Error = await Tomp3(input)
+					if (typeof Respon !== "string") return
+					await res.sendMessage(from, fs.readFileSync(Respon), MessageType.audio, { quoted: mess})
+					await Tunggu(2000)
+					if (fs.existsSync(Respon)) fs.unlinkSync(Respon)
+				} else {
+					res.sendMessage(from, fs.readFileSync(result), MessageType.audio, { quoted: mess})
+					await Tunggu(2000)
+					if (fs.existsSync(result)) fs.unlinkSync(result)
+				}
+			})
+		}, { noPrefix: false })
+	}
+}
+	protected async toCUTE () {
+		globalThis.CMD.on("converter|tocute", "tocute", async (res: WAConnection, data:  Commands) => {
+			const { media, isQuotedAudio, from, mess, isAudio, sender } = data
+			if (!media && !isQuotedAudio || !media && isAudio) return res.sendMessage(from, IndBukanAud(), MessageType.text, { quoted: mess})
+			await res.sendMessage(from, IndTunggu(), MessageType.text, { quoted: mess})
+			const input: string = await res.downloadAndSaveMediaMessage(media, "./lib/storage/temp/" +  sender.replace("@s.whatsapp.net", ""))
+			await Tocute(input).then(async (result: string | Error) => {
+				if (typeof result !== "string") {
+					const Respon: string | Error = await Tocute(input)
 					if (typeof Respon !== "string") return
 					await res.sendMessage(from, fs.readFileSync(Respon), MessageType.audio, { quoted: mess})
 					await Tunggu(2000)
