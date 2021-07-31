@@ -27,3 +27,12 @@ export function Runtime(seconds: number): string {
 	var sDisplay = second  > 0 ? second  + (second  == 1 ? " Detik" : " detik") : "";
 	return dDisplay + hDisplay + mDisplay + sDisplay;
 }
+export function RandomName (jumlah: number): string {
+	const result: string[] = []
+	const karakter: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	let Total: number = karakter.length;
+	for (let i: number = 0; i < jumlah; i++) {
+		result.push(karakter.charAt(Math.floor(Math.random() * Total)))
+	}
+	return result.join('');
+}

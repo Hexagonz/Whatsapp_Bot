@@ -40,3 +40,42 @@ export const IndErrDelMulti = () => {
 export const IndMultiData = (prefix: string) => {
 	return `Multi Prefix saat ini adalah  ${prefix}`
 }
+export const IndBukanSticker = () => {
+	return `Harap kirim caption dengan reply sticker`
+}
+export const IndGagalSticker = () => {
+	return `Gagal menbuat sticker harap ganti media lain`
+}
+export const IndFileGede = (sender: string) => {
+	return `Maaf ka @${sender.replace(/@s.whatsapp.net/i, "")} Size media yang anda kirim terlalu besar untuk bot`
+}
+export const LimitStorage = () => {
+	return `*「❗」* Maaf Limit storage anda telah habis, Agar anda bisa menggunakan kembali harap hapus salah satu media anda untuk menambah limit storage`
+}
+export const IndIdDuplicate = () => {
+	return `*「❗」* Maaf Id yang anda masukkan duplicate harap ganti dengan id lain`
+}
+export const IndSuccesSave = (Id: string, Prefix: string, isOwner: boolean, limit: number) => {
+	return `
+*📬 ID :* ${Id}
+*📍 STATUS :* Berhasil menyimpan media ketik ${Prefix}get ${Id} untuk mengambil file anda
+*📧 NOTES :* Sisa Limit File anda tersisa  ${isOwner ? "Unlimited" : Number(4 - limit)}, jika habis anda tidak dapat menyimpan kembali`
+}
+export const IndMasukkanId = () => {
+	return `*「❗」* Harap masukkan id`
+}
+export const IndIdStorageKosong = () => {
+	return `*「❗」* Maaf id storage yang ingin anda cari kosong`
+}
+export const IndCheckStorage = (data: string[], sender: string) => {
+	let jumlah = 1
+	let text = `*「 𝐒𝐓𝐎𝐑𝐀𝐆𝐄 」*\n\n`
+	for (let result of data) {
+		text += `${jumlah}. ${result.split(".")[0].replace(sender, "")}\n`
+		jumlah++
+	}
+	return text
+}
+export const IndErrorMP3 = () => {
+	return `*「❗」* Maaf fitur media mp3 yang anda masukkan error`
+}

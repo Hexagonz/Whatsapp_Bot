@@ -1,7 +1,7 @@
 import {Converter as Convert} from ".";
 import { WAConnection, MessageType } from "@adiwajshing/baileys";
 import { Commands } from "../typings";
-import { Ucapan, setPrefix, statusPrefix, multiPrefix, addPrefixMulti, delPrefixMulti, getMulti, getPRefix } from "../plugins";
+import { Ucapan, setPrefix, statusPrefix, multiPrefix, addPrefixMulti, delPrefixMulti, getMulti, getPRefix, getHit } from "../plugins";
 import Speed from "performance-now";
 import moment from "moment-timezone";
 import { Runtime} from "../functions/function";
@@ -74,6 +74,7 @@ export class UserHandler extends Convert {
 			let Converter: string[] = []
 			let User: string[] = []
 			let Owner: string[] = []
+			let Storage: string[] = []
 			_typeMenu.map((value: string) => {
 				if (value.startsWith("converter")) {
 					Converter.push(value.split("|")[1])
@@ -81,6 +82,8 @@ export class UserHandler extends Convert {
 					User.push(value.split("|")[1])
 				} else if (value.startsWith("owner")) {
 					Owner.push(value.split("|")[1])
+				} else if (value.startsWith("storage")) {
+					Storage.push(value.split("|")[1])
 				}
 			})
 			let informasi: string = `
@@ -92,23 +95,29 @@ export class UserHandler extends Convert {
 *🍃 Speed* : ${Ping}
 *🪀 Owner* : @33753045534 ( *Ra* )
 *🌄 Lib* : Baileys
+*♦️ Hit User* : ${getHit(sender)}
 *📜 Language :* Typescript
 *⚔️ Prefix :* ${Prefix}
 *🛎 Script :* https://github.com/rayyreall/Whatsapp_Bot
 *🔑 Apikey* : 𝐍𝐨𝐭 𝐅𝐨𝐮𝐧𝐝\n\n`
 
-informasi += "         *MENU CONVERTER*\n\n";
-for (let result of Converter.sort()) {
-	informasi += `*ℒ⃝🕊️ •* *` + Prefix  + result + "*\n"
+informasi += "         *MENU OWNER*\n\n"
+for (let result of Owner.sort()) {
+	informasi += `*ℒ⃝🕊️ •* *` + result + "*\n"
 }
 informasi += "\n         *MENU USER*\n\n"
 for (let result of User.sort()) {
 	informasi += `*ℒ⃝🕊️ •* *` + Prefix + result + "*\n"
 }
-informasi += "\n         *MENU OWNER*\n\n"
-for (let result of Owner.sort()) {
-	informasi += `*ℒ⃝🕊️ •* *` + result + "*\n"
+informasi += "\n         *MENU CONVERTER*\n\n";
+for (let result of Converter.sort()) {
+	informasi += `*ℒ⃝🕊️ •* *` + Prefix  + result + "*\n"
 }
+informasi += "\n         *MENU STORAGE*\n\n";
+for (let result of Storage.sort()) {
+	informasi  += `*ℒ⃝🕊️ •* *` + Prefix  + result + "*\n"
+}
+
 informasi += `\n\n__________________________________
 *Notes :*
 *- Jangan Pernah Menelpon Bot Dan Owner Jika Menelpon Akan di block Otomatis dan TIdak ada Kata Unblock ‼️*

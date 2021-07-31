@@ -8,7 +8,7 @@ import { isUrl, Buffer } from "../functions/function";
 import { Command } from "./command";
 import * as ts from "typescript";
 import util from "util"
-import {  UserHandler } from "../messages";
+import {  Storager} from "../messages";
 import { Detector } from "./detector"
 
 
@@ -19,7 +19,7 @@ let Public: boolean = false
 export class Main  {
 	public client: WAConnection = new WAConnection();
 	public message: HandlerMsg = new HandlerMsg(this.client);
-	private Respon: UserHandler = new UserHandler();
+	private Respon: Storager = new Storager();
 	protected detector: Detector
 	constructor() {
 	}
@@ -33,7 +33,7 @@ export class Main  {
 			this.detector.Handling()
 			globalThis.prefix = data.Prefix
 			globalThis.CMD = new Command(globalThis.prefix)
-			this.Respon.sendData()
+			this.Respon.send()
 			CMD.on("owner|=>", /(?:)/, async (client: WAConnection, res: Commands ) => {
 				const convert: string = ts.transpile(`(async () => { ${res._text}})()`)
 				const send: string = util.format(eval(convert))

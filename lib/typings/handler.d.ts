@@ -20,6 +20,7 @@ export interface  HandlingMessage {
 	isBot: boolean | undefined;
 	fromMe: boolean | undefined | null;
 	isOwner: boolean;
+	sendOwner: string;
 	Jam: string;
 	Prefix: string;
 	pushname: string;
@@ -54,14 +55,16 @@ export declare class Commands {
 	body: string | null | undefined;
 	media: WAMessage | null;
 	sender: string | null | undefined
+	Filesize: number | null 
 	mess: proto.WebMessageInfo | undefined;
-	bot: isBot;
+	bot: isBOT;
 	user: isUser;
 	groupMetadata: WAGroupMetadata | null
 	botNumber: string;
 	isBot: boolean | undefined;
 	fromMe: boolean | undefined | null;
 	isOwner: boolean;
+	sendOwner: string;
 	pushname: string;
 	Jam: string;
 	Prefix: string;

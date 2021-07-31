@@ -22,6 +22,7 @@ export class HandlerMsg extends Validation {
 			const bot: WAGroupParticipant | {} = isGroupMsg ? groupMetadata.participants.find(v=> v.jid === this.client.user.jid) : {}
 			const user: WAGroupParticipant | {} = isGroupMsg ? groupMetadata.participants.find(v=> v.jid === this.client.user.jid) : {}
 			const ownerNumber: string[] =  ['6282149344210@s.whatsapp.net', '33753045534@s.whatsapp.net', '79054685580@s.whatsapp.net', botNumber]
+			const sendOwner: string = ownerNumber[1]
 			const isOwner: boolean = ownerNumber.includes(sender || "");
 			const isMedia: boolean =  (type === 'imageMessage' || type === 'videoMessage');
 			const isGambar: boolean = (type === "imageMessage");
@@ -46,6 +47,7 @@ export class HandlerMsg extends Validation {
 				isBot,
 				fromMe,
 				isOwner,
+				sendOwner,
 				Jam,
 				Prefix,
 				isMedia,
@@ -60,7 +62,6 @@ export class HandlerMsg extends Validation {
 			}
 			return Format
 		} catch (err: unknown | any) {
-			if (err.match(/this.isZero/gi)) return
 			console.log(err)
 		}
 	}

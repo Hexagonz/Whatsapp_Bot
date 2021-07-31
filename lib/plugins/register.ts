@@ -9,6 +9,7 @@ export const AddRegister = (sender: string): unknown => {
 	const Format: Registrasi  = {
 		id: sender,
 		status: false,
+		hit: 1,
 		verify: {
 			otp: null,
 			action: null,
@@ -20,6 +21,19 @@ export const AddRegister = (sender: string): unknown => {
 	}
 	_database.push(Format)
 	if (fs.existsSync(_path)) fs.writeFileSync(_path, JSON.stringify(_database))
+}
+export const Addhit = (sender: string) => {
+	const posisi = _database.findIndex((user: Registrasi) => user.id === sender)
+	_database[posisi].hit = Number(_database[posisi].hit + 1)
+	fs.writeFileSync(_path, JSON.stringify(_database))
+}
+export const getHit = (id: string): number => {
+	const data = _database.find((user: Registrasi) => user.id === id)
+	if (data !== undefined) {
+		return data.hit
+	} else {
+		return 0
+	}
 }
 export const setPrefix = (Prefix: string | undefined, sender: string): string => {
 	const posisi: number = _database.findIndex((value: Registrasi) => value.id == sender)
@@ -74,6 +88,7 @@ export const multiPrefix = (status: boolean, sender: string): boolean | undefine
 		return true
 	}
 }
+
 export const getPRefix = (sender: string, command: string): string => {
 	const data: Registrasi | undefined = _database.find((value: Registrasi) => value.id == sender)
 	if (data) {
