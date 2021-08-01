@@ -1,3 +1,5 @@
+import { instaStalk } from "../typings"
+
 export const IndTest = () => {
 	return `Test`
 }
@@ -59,7 +61,6 @@ export const IndSuccesSave = (Id: string, Prefix: string, isOwner: boolean, limi
 	return `
 *ID :* ${Id}
 *STATUS :* Berhasil menyimpan media ketik ${Prefix}get ${Id} untuk mengambil file anda
-
 *NOTES*
 Sisa Limit File anda tersisa  ${isOwner ? "Unlimited" : Number(4 - limit)}, jika habis anda tidak dapat menyimpan kembali`
 }
@@ -80,4 +81,23 @@ export const IndCheckStorage = (data: string[], sender: string) => {
 }
 export const IndErrorMP3 = () => {
 	return `Maaf, Terjadi kesalahan pada fitur media mp3 silahkan coba kembali`
+}
+export const IgStalk = (data: instaStalk) => {
+	return `
+Id : ${data.id}
+Username : ${data.username}
+NickName : ${data.nickname}
+Kategori : ${data.category}
+Bio : ${data.bio}
+Akun bisnis : ${data.akun_bisnis ? "Iya" : "Tidak"}
+Private : ${data.private ? "Iya" : "Tidak"}
+Verifikasi : ${data.centang ? "Iya" : "Tidak"}
+Total Post: ${data.total_post}
+`
+}
+export const IndUserKosong = (pushname: string) => {
+	return `Maaf ka ${pushname} Username instagram yang anda cari kosong / akun pemilik di private`
+}
+export const IndUsernameNoKosong = () => {
+	return `Maaf ka Harap masukkan username instagram yang ingin anda stalk`
 }

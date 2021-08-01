@@ -31,6 +31,7 @@ export class HandlerMsg extends Validation {
 			const Jam: string = moment(new Date()).format("LLLL");
 			const command: string =  body.toLowerCase().split(/ +/g)[0] || "";
 			const Prefix: string = getPRefix(sender, command)
+			const IsCMD: boolean = command.startsWith(Prefix)
 			const isQuotedSticker: boolean = type === 'extendedTextMessage' && content.includes('stickerMessage');
 			const isQuotedImage: boolean = type === 'extendedTextMessage' && content.includes('imageMessage');
 			const isQuotedVideo: boolean = type === 'extendedTextMessage' && content.includes('videoMessage');
@@ -50,6 +51,7 @@ export class HandlerMsg extends Validation {
 				sendOwner,
 				Jam,
 				Prefix,
+				IsCMD,
 				isMedia,
 				isGambar,
 				isVideo,

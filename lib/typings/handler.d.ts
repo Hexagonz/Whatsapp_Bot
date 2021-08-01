@@ -23,6 +23,7 @@ export interface  HandlingMessage {
 	sendOwner: string;
 	Jam: string;
 	Prefix: string;
+	IsCMD: boolean 
 	pushname: string;
 	bot: any;
 	user: any;
@@ -68,6 +69,7 @@ export declare class Commands {
 	pushname: string;
 	Jam: string;
 	Prefix: string;
+	IsCMD: boolean 
 	isMedia: boolean;
 	isGambar: boolean;
 	isVideo: boolean;

@@ -6,7 +6,9 @@ export class Detector {
 	constructor(private client: WAConnection, public data: HandlingMessage ) {}
 	public Handling () {
 		this.getRegister()
-		this.addHit()
+		if (this.data.IsCMD) {
+			this.addHit()
+		}
 	}
 	private getRegister () {
 		AddRegister(this.data.sender)

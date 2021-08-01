@@ -25,7 +25,7 @@ export class Validation  {
 		const media: WAMessage | null = message?.message?.imageMessage || message?.message?.videoMessage ? message : message?.message?.extendedTextMessage?.contextInfo?.quotedMessage?.imageMessage || message?.message?.extendedTextMessage?.contextInfo?.quotedMessage?.videoMessage || message?.message?.extendedTextMessage?.contextInfo?.quotedMessage?.stickerMessage ?
 		JSON.parse(JSON.stringify(message).replace('quotedM', 'm')).message?.extendedTextMessage?.contextInfo : null;
 		const sender: string | null | undefined = chats?.key.fromMe ? this.client.user.jid : isGroupMsg ? chats?.participant : chats?.key.remoteJid;
-		const Filesize: number | null = media ? media.message ? media.message.audioMessage ? media.message.audioMessage.fileLength : media.message.imageMessage ? media.message.imageMessage.fileLength : media.message.videoMessage ? media.message.videoMessage.fileLength : media.message.documentMessage ? media.message.documentMessage.fileLength : 0 : null : null
+		const Filesize: number | Long = media ? media.message ? media.message.audioMessage ? media.message.audioMessage.fileLength : media.message.imageMessage ? media.message.imageMessage.fileLength : media.message.videoMessage ? media.message.videoMessage.fileLength : media.message.documentMessage ? media.message.documentMessage.fileLength : 0 : null : null
 		const Format: Validasi = {
 			from, message, isGroupMsg, type, quotedType, typeQuoted, quotedMsg, bodyQuoted, bodyButton: CommandButton, body, media, sender, Filesize
 		}

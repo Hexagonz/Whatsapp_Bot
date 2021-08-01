@@ -5,6 +5,7 @@ import { Ucapan, setPrefix, statusPrefix, multiPrefix, addPrefixMulti, delPrefix
 import Speed from "performance-now";
 import moment from "moment-timezone";
 import { Runtime} from "../functions/function";
+import { Client } from "../src/Client"
 import { IndSuccesSetPrefix, IndSuccesSetMulti,  IndErrMulti, IndDonePushMulti, IndErrPushMulti, IndDoneDelMulti, IndErrDelMulti, IndMultiData} from "../lang/ind"
 
 
@@ -13,8 +14,8 @@ const Ping: string = (Speed() - LajuCepat).toFixed(4)
 const Jam: string = moment(new Date()).format("LLLL")
 
 export class UserHandler extends Convert {
-	constructor() {
-		super()
+	constructor(public Ra: Client) {
+		super(Ra)
 	}
 	public async sendData () {
 		this.SendingConverter()
@@ -29,30 +30,30 @@ export class UserHandler extends Convert {
 		globalThis.CMD.on("user|setprefix", ["setprefix"], (res: WAConnection, data: Commands) => {
 			const { from, mess, sender, args } = data
 			const hasil = setPrefix(args[0], sender)
-			res.sendMessage(from, IndSuccesSetPrefix(hasil, statusPrefix(sender)), MessageType.text, { quoted: mess})
+			this.Ra.reply (from, IndSuccesSetPrefix(hasil, statusPrefix(sender)),mess)
 		}, { noPrefix: false })
 	}
 	private checkMulti () {
 		globalThis.CMD.on("user|cek multi", "cekmulti", (res: WAConnection, data: Commands) => {
 			const { from, mess, sender, args } = data
 			const hasil = getMulti(sender)
-			res.sendMessage(from, IndMultiData(hasil), MessageType.text, { quoted: mess})
+			this.Ra.reply(from, IndMultiData(hasil), mess)
 		})
 	}
 	private addPrefix () {
 		globalThis.CMD.on("user|addmulti", ["addmulti"], (res: WAConnection, data: Commands) => {
 			const { from, mess, sender, args } = data
-			if (args[0] == undefined) return res.sendMessage(from, IndErrPushMulti(), MessageType.text, { quoted: mess})
+			if (args[0] == undefined) return this.Ra.reply(from, IndErrPushMulti(), mess)
 			addPrefixMulti(sender, args[0])
-			res.sendMessage(from, IndDonePushMulti(args[0]), MessageType.text, { quoted: mess})
+			this.Ra.reply(from, IndDonePushMulti(args[0]), mess)
 		}, { noPrefix: false})
 	}
 	private delPrefix () {
 		globalThis.CMD.on("user|delmulti", ["delmulti"], (res: WAConnection, data: Commands) => {
 			const { from, mess, sender, args } = data
-			if (args[0] == undefined) return res.sendMessage(from, IndErrDelMulti(), MessageType.text, { quoted: mess})
+			if (args[0] == undefined) return this.Ra.reply(from, IndErrDelMulti(), mess)
 			delPrefixMulti(sender, args[0])
-			res.sendMessage(from, IndDoneDelMulti(args[0]), MessageType.text, { quoted: mess})
+			this.Ra.reply(from, IndDoneDelMulti(args[0]), mess)
 		}, { noPrefix: false})
 	}
 	private multiPrefix () {
@@ -60,10 +61,10 @@ export class UserHandler extends Convert {
 			const { from, mess, sender, args } = data
 			if (args[0] == "on") {
 				multiPrefix(true, sender)
-				res.sendMessage(from, IndSuccesSetMulti(true), MessageType.text, { quoted: mess})
+				this.Ra.reply(from, IndSuccesSetMulti(true), mess)
 			} else if (args[0] == "off") {
 				multiPrefix(false, sender)
-				res.sendMessage(from, IndSuccesSetMulti(false), MessageType.text, { quoted: mess})
+				this.Ra.reply(from, IndSuccesSetMulti(false), mess)
 			}
 		},  { noPrefix: false })
 	}
@@ -75,6 +76,7 @@ export class UserHandler extends Convert {
 			let User: string[] = []
 			let Owner: string[] = []
 			let Storage: string[] = []
+			let Stalker: string[] = []
 			_typeMenu.map((value: string) => {
 				if (value.startsWith("converter")) {
 					Converter.push(value.split("|")[1])
@@ -84,6 +86,8 @@ export class UserHandler extends Convert {
 					Owner.push(value.split("|")[1])
 				} else if (value.startsWith("storage")) {
 					Storage.push(value.split("|")[1])
+				} else if (value.startsWith("stalk")) {
+					Stalker.push(value.split("|")[1])
 				}
 			})
 			let informasi: string = `
@@ -117,7 +121,10 @@ informasi += "\n         *MENU STORAGE*\n\n";
 for (let result of Storage.sort()) {
 	informasi  += `*ℒ⃝🕊️ •* *` + Prefix  + result + "*\n"
 }
-
+informasi += "\n         *MENU STALK*\n\n";
+for (let result of Stalker.sort()) {
+	informasi  += `*ℒ⃝🕊️ •* *` + Prefix  + result + "*\n"
+}
 informasi += `\n\n__________________________________
 *Notes :*
 *- Jangan Pernah Menelpon Bot Dan Owner Jika Menelpon Akan di block Otomatis dan TIdak ada Kata Unblock ‼️*
@@ -131,7 +138,7 @@ __________________________________
 *🔖 || IG*
 @rayyreall`
 
-res.sendMessage(from, informasi, MessageType.text, { quoted: mess, contextInfo: { mentionedJid: [sender]}})
+this.Ra.sendTextWithMentions(from, informasi, [sender], mess)
 		})
 	}
 }
