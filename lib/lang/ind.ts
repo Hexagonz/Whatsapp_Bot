@@ -93,7 +93,7 @@ export const IgStalk = (data: instaStalk) => {
 *⚔️ Kategori :* ${data.category}
 *🎀 Bio :* ${data.bio}
 *🔖Akun bisnis :* ${data.akun_bisnis ? "Iya" : "Tidak"}
-*🔐Private Akun :* ${data.private ? "Iya" : "Tidak"}
+*🔐 Private Akun :* ${data.private ? "Iya" : "Tidak"}
 *🚨 Akun Terverifikasi :* ${data.centang ? "Iya" : "Tidak"}
 *📦 Total Post:* ${data.total_post}
 `
