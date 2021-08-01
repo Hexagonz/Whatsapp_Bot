@@ -1,4 +1,5 @@
-import { instaStalk } from "../typings"
+import { instaStalk, TiktokStalk } from "../typings";
+import { ChannelSearchResult } from "yt-search";
 
 export const IndTest = () => {
 	return `Test`
@@ -100,4 +101,42 @@ export const IndUserKosong = (pushname: string) => {
 }
 export const IndUsernameNoKosong = () => {
 	return `Maaf ka Harap masukkan username instagram yang ingin anda stalk`
+}
+export const IndYtStalk = (data: ChannelSearchResult) => {
+	return `
+Nama : ${data.name}
+Url : ${data.url}
+Total Video : ${data.videoCount}
+Total Subcriber : ${data.subCountLabel}
+`
+}
+export const IndYtStalkError = () => {
+	return `Fitur Yt stalk sedang error harap coba lagi nanti`
+}
+export const IndStalkUsernameNull = (fitur: string) => {
+	return `Username ${fitur} yang anda cari sedang kosong`
+}
+export const IndTiktokStalk = (data: TiktokStalk) => {
+	const Tanggal_Upload = new Date(Number(data.createTime) * 1000).toLocaleString("id", {
+	year: "numeric",
+	month: "short",
+	weekday: 'short',
+	hour: 'numeric',
+	minute: 'numeric',
+	day: "numeric"
+	})
+	return `
+ID : ${data.id}
+Unique Id : ${data.uniqueId}
+Nickname : ${data.nickname}
+Signature : ${data.signature}
+Tanggal Buat : ${Tanggal_Upload}
+Verived : ${data.verified ? "Yes" : "No"}
+Private : ${data.privateAccount ? "Yes" : "No"}
+Bio Link : ${data.bioLink ? data.bioLink.link : ""}
+Room Id : ${data.roomId}
+`
+}
+export const IndMasukkanUsernameNoUrl = (fitur: string) => {
+	return `Maaf ka harap masukkan username ${fitur} bukan Link`
 }

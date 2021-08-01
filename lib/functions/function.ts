@@ -36,3 +36,15 @@ export function RandomName (jumlah: number): string {
 	}
 	return result.join('');
 }
+export function convertAngka(number: number): string {
+	const data: string[] = String(number).split("").reverse()
+	let combine: string = ''
+
+	for (let i = 0; i < data.length; i++) {
+		if ((i + 1) % 3 == 0 && i != data.length -1) {
+			data[i] = `.${data[i]}`
+		}
+	}
+	combine = `${data.reverse().join("")}`
+	return combine
+}
