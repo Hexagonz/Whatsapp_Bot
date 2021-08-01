@@ -69,7 +69,7 @@ export const IndMasukkanId = () => {
 	return `Harap masukkan id`
 }
 export const IndIdStorageKosong = () => {
-	return `Maaf id storage yang ingin anda cari kosong`
+	return `Maaf id storage yang ingin anda cari kosong atau tidak ada`
 }
 export const IndCheckStorage = (data: string[], sender: string) => {
 	let jumlah = 1
@@ -85,15 +85,17 @@ export const IndErrorMP3 = () => {
 }
 export const IgStalk = (data: instaStalk) => {
 	return `
-Id : ${data.id}
-Username : ${data.username}
-NickName : ${data.nickname}
-Kategori : ${data.category}
-Bio : ${data.bio}
-Akun bisnis : ${data.akun_bisnis ? "Iya" : "Tidak"}
-Private : ${data.private ? "Iya" : "Tidak"}
-Verifikasi : ${data.centang ? "Iya" : "Tidak"}
-Total Post: ${data.total_post}
+	*INSTAGRAM STALK*
+	
+*🎁 Id :* ${data.id}
+*🌐 Username :* ${data.username}
+*🌹 Nickname :* ${data.nickname}
+*⚔️ Kategori :* ${data.category}
+*🎀 Bio :* ${data.bio}
+*🔖Akun bisnis :* ${data.akun_bisnis ? "Iya" : "Tidak"}
+*🔐Private Akun :* ${data.private ? "Iya" : "Tidak"}
+*🚨 Akun Terverifikasi :* ${data.centang ? "Iya" : "Tidak"}
+*📦 Total Post:* ${data.total_post}
 `
 }
 export const IndUserKosong = (pushname: string) => {
