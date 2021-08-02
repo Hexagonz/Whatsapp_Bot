@@ -1,4 +1,5 @@
 import got from "got";
+import { proto } from "@adiwajshing/baileys";
 
 export function isUrl (Link: string): RegExpMatchArray | null {
 	return Link.match(new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)/, 'gi'))
@@ -47,4 +48,64 @@ export function convertAngka(number: number): string {
 	}
 	combine = `${data.reverse().join("")}`
 	return combine
+}
+export function RandomOtp () {
+	const otp: string[] = [];
+	const data: string = "1234567890";
+	for (let i: number = 0; i < 6; i++) {
+		otp.push(data.charAt(Math.floor(Math.random() * data.length)))
+	}
+	return otp.join("")
+}
+export function CheckCommand (Patert: string, Prefix: string, isOwner: boolean): boolean {
+	const Type: string[] = Object.keys(globalThis.CMD.events)
+	let Status = false
+	Type.map((value: string) => {
+		if (!isOwner && value.startsWith("owner")) return Status
+		if (typeof globalThis.CMD.events[value].pattern === "string") {
+			if (new RegExp(`${Patert.replace(new RegExp(`${Prefix}`), "")}`, 'i').test(globalThis.CMD.events[value].pattern)) {
+				Status = true
+			}
+		} else if (typeof globalThis.CMD.events[value].pattern === "object") {
+			if (new RegExp(`${Patert.replace(new RegExp(`${Prefix}`), "")}`, 'i').test(globalThis.CMD.events[value].pattern)) {
+				Status = true
+			}
+		}
+	})
+	return Status
+}
+
+export function CheckSticker (from: string, FileSha: string, Stick: Map<string, { sender: string, id: number, filesha: string, mess: proto.WebMessageInfo}[]>): boolean {
+	let status: boolean = false
+	const hasil: { sender: string, id: number, filesha: string, mess: proto.WebMessageInfo}[] = Stick.get(from)
+	if (!hasil) return status
+	const result: { sender: string, id: number, filesha: string, mess: proto.WebMessageInfo} = hasil.find((x) => x.filesha === FileSha)
+	if (result) {
+		status = true
+	}
+	return status
+}
+export async function AddSticker (Key: proto.WebMessageInfo, from: string, FileSha: string, sender: string, Stick: Map<string, { sender: string, id: number, filesha: string, mess: proto.WebMessageInfo}[]>): Promise <void> {
+	if (Stick.has(from)) {
+		const hasil: { sender: string, id: number, filesha: string, mess: proto.WebMessageInfo}[]= Stick.get(from)
+		if (hasil.length === 3) {
+			let respon: { sender: string, id: number, filesha: string, mess: proto.WebMessageInfo}[] = []
+			hasil.map((x) => {
+				if (x.id == 1) return
+				x.id = Number(x.id - 1)
+				respon.push(x)
+			})
+			Stick.set(from, [...respon, { sender: sender, id: 3, filesha: FileSha, mess: Key}])
+		} else if (hasil.length === 2) {
+			const hasil: { sender: string, id: number, filesha: string, mess: proto.WebMessageInfo}[] = Stick.get(from)
+			Stick.set(from, [...hasil, { sender: sender, id: 3, filesha: FileSha, mess: Key}])
+		} else if (hasil.length === 1) {
+			const hasil: { sender: string, id: number, filesha: string, mess: proto.WebMessageInfo}[] = Stick.get(from)
+			Stick.set(from, [...hasil, { sender: sender, id: 2, filesha: FileSha, mess: Key}])
+		} else if (hasil.length === 0) {
+			Stick.set(from, [{ sender: sender, id: 1, filesha: FileSha, mess: Key}])
+		}
+	} else {
+		Stick.set(from, [{ sender: sender, id: 1, filesha: FileSha, mess: Key}])
+	}
 }

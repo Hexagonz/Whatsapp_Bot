@@ -3,7 +3,9 @@ import { Validation } from './validasi';
 import { Validasi, HandlingMessage,  } from "../typings";
 import moment from "moment-timezone";
 import { getPRefix } from "../plugins";
+import * as fs from "fs";
 
+var _database: { ownerNumber: string[], bot: string} = JSON.parse(fs.readFileSync("./lib/database/settings.json").toString())
 
 export class HandlerMsg extends Validation {
 	public async handling (chats: WAChatUpdate): Promise <HandlingMessage | undefined> {
@@ -21,8 +23,9 @@ export class HandlerMsg extends Validation {
 			const botNumber: string = this.client.user.jid;
 			const bot: WAGroupParticipant | {} = isGroupMsg ? groupMetadata.participants.find(v=> v.jid === this.client.user.jid) : {}
 			const user: WAGroupParticipant | {} = isGroupMsg ? groupMetadata.participants.find(v=> v.jid === this.client.user.jid) : {}
-			const ownerNumber: string[] =  ['6282149344210@s.whatsapp.net', '33753045534@s.whatsapp.net', '79054685580@s.whatsapp.net', botNumber]
-			const sendOwner: string = ownerNumber[1]
+			_database.ownerNumber.push(botNumber)
+			const ownerNumber: string[] = _database.ownerNumber
+			const sendOwner: string = ownerNumber[0]
 			const isOwner: boolean = ownerNumber.includes(sender || "");
 			const isMedia: boolean =  (type === 'imageMessage' || type === 'videoMessage');
 			const isGambar: boolean = (type === "imageMessage");
@@ -30,8 +33,8 @@ export class HandlerMsg extends Validation {
 			const isAudio: boolean = (type === "audioMessage");
 			const Jam: string = moment(new Date()).format("LLLL");
 			const command: string =  body.toLowerCase().split(/ +/g)[0] || "";
-			const Prefix: string = getPRefix(sender, command)
-			const IsCMD: boolean = command.startsWith(Prefix)
+			const Prefix: string = getPRefix(sender, command);
+			const IsCMD: boolean = command.startsWith(Prefix);
 			const isQuotedSticker: boolean = type === 'extendedTextMessage' && content.includes('stickerMessage');
 			const isQuotedImage: boolean = type === 'extendedTextMessage' && content.includes('imageMessage');
 			const isQuotedVideo: boolean = type === 'extendedTextMessage' && content.includes('videoMessage');

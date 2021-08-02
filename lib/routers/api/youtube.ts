@@ -1,6 +1,6 @@
 import ytSearch, { SearchResult, ChannelSearchResult } from "yt-search";
 import axios, { AxiosResponse } from "axios";
-import cheerio, { CheerioAPI} from "cheerio";
+import cheerio, { CheerioAPI } from "cheerio"
 
 
 export async function ytStalk (channel: string): Promise <ChannelSearchResult> {
@@ -12,7 +12,6 @@ export async function ytStalk (channel: string): Promise <ChannelSearchResult> {
 		})
 	})
 }
-
 export async function Y2mateVid (url: string): Promise<{ link: string, thumb: string, size: string}> {
 	return new Promise(async (resolve, reject) => {
 		try {

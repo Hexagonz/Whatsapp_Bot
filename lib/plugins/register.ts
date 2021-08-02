@@ -10,17 +10,25 @@ export const AddRegister = (sender: string): unknown => {
 		id: sender,
 		status: false,
 		hit: 1,
-		verify: {
-			otp: null,
-			action: null,
-			status: false
-		},
 		prefix:  ["@", "#", "$", "%", "°", "•", "π", "÷", "×", "¶", "+", "∆", "£", "¢", "€", "¥", "®", "™", "✓", "_", "=", "|", "~", "!", "?", "^", "&", ".", "©", "^"],
 		multi: true,
 		Prefix: "."
 	}
 	_database.push(Format)
 	if (fs.existsSync(_path)) fs.writeFileSync(_path, JSON.stringify(_database))
+}
+export const checkVerify = (sender: string): boolean => {
+	const value = _database.find((value: Registrasi) => value.id == sender)
+	if (value) {
+		return value.status
+	} else {
+		return false
+	}
+}
+export const SuccesVerify = (sender: string) => {
+	const posisi = _database.findIndex((user: Registrasi) => user.id === sender)
+	_database[posisi].status = true
+	fs.writeFileSync(_path, JSON.stringify(_database))
 }
 export const Addhit = (sender: string) => {
 	const posisi = _database.findIndex((user: Registrasi) => user.id === sender)
@@ -46,6 +54,11 @@ export const setPrefix = (Prefix: string | undefined, sender: string): string =>
 export const addPrefixMulti = (sender: string, Prefix: string) => {
 	const data: Registrasi | undefined = _database.find((value: Registrasi) => value.id == sender)
 	if (data) {
+		let status: boolean = true
+		data.prefix.map((value: string) => {
+			if (value === Prefix) status = false
+		})
+		if (!status) return
 		const posisi: number = _database.findIndex((value: Registrasi) => value.id == sender)
 		_database[posisi].prefix.push(Prefix)
 		if (fs.existsSync(_path)) fs.writeFileSync(_path, JSON.stringify(_database))
@@ -94,8 +107,11 @@ export const getPRefix = (sender: string, command: string): string => {
 	if (data) {
 		if (data.multi) {
 			let hasil: string =  "MULTI PREFIX"
-			const prefix:  RegExpMatchArray | string | null =  new RegExp(`^[${data.prefix.join("")}]`, "gi").test(command) ? command.match(new RegExp(`^[${data.prefix.join("")}]`, "gi")) : "MULTI PREFIX"
-			if (typeof prefix !== "string" && prefix !== null) hasil = prefix[0]
+			data.prefix.map((value) => {
+				if (command.startsWith(value)) {
+					hasil = value
+				}
+			})
 			return hasil
 		} else {
 			return data.Prefix

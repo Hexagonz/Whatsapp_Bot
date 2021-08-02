@@ -4,13 +4,16 @@ import { Browsers, WAOpenResult } from "@adiwajshing/baileys";
 import { Main } from "../../src/main";
 import chalk from "chalk";
 import * as fs from "fs";
+import { Prompt, StartingLog } from "../../tools"
 
 export class Connected extends Main{
 	constructor() {
 		super()
 	}
 	public async Connect (): Promise <void> {
+		Prompt ()
 		await this.SessionsSave()
+		StartingLog()
 		return void await this.Response()
 	}
 	protected async SessionsSave (): Promise <WAOpenResult> {

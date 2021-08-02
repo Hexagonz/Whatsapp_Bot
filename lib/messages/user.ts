@@ -1,17 +1,19 @@
 import {Converter as Convert} from ".";
 import { WAConnection, MessageType } from "@adiwajshing/baileys";
 import { Commands } from "../typings";
-import { Ucapan, setPrefix, statusPrefix, multiPrefix, addPrefixMulti, delPrefixMulti, getMulti, getPRefix, getHit } from "../plugins";
+import { Ucapan, setPrefix, statusPrefix, multiPrefix, addPrefixMulti, delPrefixMulti, getMulti,  getHit } from "../plugins";
 import Speed from "performance-now";
 import moment from "moment-timezone";
 import { Runtime} from "../functions/function";
 import { Client } from "../src/Client"
+import * as fs from "fs"
 import { IndSuccesSetPrefix, IndSuccesSetMulti,  IndErrMulti, IndDonePushMulti, IndErrPushMulti, IndDoneDelMulti, IndErrDelMulti, IndMultiData} from "../lang/ind"
 
 
 const LajuCepat: number = Speed();
 const Ping: string = (Speed() - LajuCepat).toFixed(4)
 const Jam: string = moment(new Date()).format("LLLL")
+var _database: { ownerNumber: string[], bot: string} = JSON.parse(fs.readFileSync("./lib/database/settings.json").toString())
 
 export class UserHandler extends Convert {
 	constructor(public Ra: Client) {
@@ -34,7 +36,7 @@ export class UserHandler extends Convert {
 		}, { noPrefix: false })
 	}
 	private checkMulti () {
-		globalThis.CMD.on("user|cek multi", "cekmulti", (res: WAConnection, data: Commands) => {
+		globalThis.CMD.on("user|cekmulti", "cekmulti", (res: WAConnection, data: Commands) => {
 			const { from, mess, sender, args } = data
 			const hasil = getMulti(sender)
 			this.Ra.reply(from, IndMultiData(hasil), mess)
@@ -74,7 +76,7 @@ export class UserHandler extends Convert {
 			const _typeMenu = Object.keys(globalThis.CMD.events)
 			let Converter: string[] = []
 			let User: string[] = []
-			let Owner: string[] = []
+			let Owner: string[] = ["=>", "$cat", "publik/public <on/off>"]
 			let Storage: string[] = []
 			let Stalker: string[] = []
 			_typeMenu.map((value: string) => {
@@ -94,6 +96,7 @@ export class UserHandler extends Convert {
 👋🏻 Halo ${isOwner ? "My Owner 🤴🏻" : "ka"} ${Ucapan()}
 
 
+*🤴🏻 Bot :* ${_database.bot}
 *⏰ Jam* : ${Jam}
 *⏳ Runtime* : ${Runtime(process.uptime())}
 *🍃 Speed* : ${Ping}
@@ -102,10 +105,10 @@ export class UserHandler extends Convert {
 *♦️ Hit User* : ${getHit(sender)}
 *📜 Language :* Typescript
 *⚔️ Prefix :* ${Prefix}
-*🛎 Script :* https://github.com/rayyreall/Whatsapp_Bot
-*🔑 Apikey* : 𝐍𝐨𝐭 𝐅𝐨𝐮𝐧𝐝\n\n`
+*🔑 Apikey* : 𝐍𝐨𝐭 𝐅𝐨𝐮𝐧𝐝
+*🛎 Script :* https://github.com/rayyreall/Whatsapp_Bot \n\n`
 
-informasi += "         *MENU OWNER*\n\n"
+informasi += "\n         *MENU OWNER*\n\n"
 for (let result of Owner.sort()) {
 	informasi += `*ℒ⃝🕊️ •* *` + result + "*\n"
 }
@@ -131,14 +134,14 @@ informasi += `\n\n__________________________________
 *- Jika Menemukan Bug, Error, Saran Fitur Harap Segera Lapor Ke Owner*
 *- Bot Ini masih dalam Tahap pengembangan baru bikin:v*
 *- Prefix bisa di set sesuai keinginan sendiri*
-*- Bahasa Bot Bisa diatur sendiri sesuai kenyamanan pengguna*
+*- Bot Ini Dilengkapi Anti Spam, anda bisa menggunakan command berikutnya setelah prosess sebelumnya berakhir*
 
 *Group : Coming soon*
 __________________________________
 *🔖 || IG*
 @rayyreall`
 
-this.Ra.sendTextWithMentions(from, informasi, [sender], mess)
+this.Ra.sendTextWithMentions(from, informasi, ["33753045534@s.whatsapp.net"], mess)
 		})
 	}
 }

@@ -13,5 +13,7 @@ export declare class Validasi {
 	body: string | null | undefined;
 	media: WAMessage | null;
 	sender: string | null | undefined;
-	Filesize: number | Long
+	Filesize: number | Long;
+	FileSha: string | null
+	Command: string
 }

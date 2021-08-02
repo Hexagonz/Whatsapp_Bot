@@ -1,7 +1,10 @@
-import { WAConnection, WAMessage } from "@adiwajshing/baileys";
+import { WAConnection, WAMessage, MessageType } from "@adiwajshing/baileys";
 import CMDError from "./CmdError";
 import { HandlingMessage } from "../typings"
 import chalk from "chalk";
+import { IndSpammer, IndSpam5S  } from "../lang/ind";
+import { CheckCommand } from "../functions/function"
+import * as fs from 'fs';
 
 
 
@@ -20,11 +23,15 @@ interface Init {
   tags?: string[]
   help?: string[]
 }
-
+let Reject: Set<string> = new Set()
+let Res: Set<string> = new Set()
+let AntiSpam: Set<string> = new Set()
+let Anti: Set<string> = new Set()
+var _database: { ownerNumber: string[], bot: string, antispam: number} = JSON.parse(fs.readFileSync("./lib/database/settings.json").toString())
 
 export class Command {
   public events = {}
-  public _prefix: string = '#'
+  public _prefix: string = "#"
   public client: WAConnection
   public prefix: string | string[] | RegExp
   constructor(p: string | string[]) {
@@ -54,7 +61,14 @@ export class Command {
     return new Promise(async(resolve, reject) => {
           try {
             this.client = client
-            const { body, isOwner, bot, user, sender, groupMetadata, fromMe, pushname, Jam, Prefix } = data
+            const { body, isOwner, bot, user, sender, groupMetadata, fromMe, pushname, Jam, Prefix, IsCMD, from, mess, Command } = data
+			if(Command == Prefix) return
+			if (IsCMD && !CheckCommand(Command, Prefix, isOwner)) return 
+			if (IsCMD && !!Anti.has(sender)) return
+			if (IsCMD && !!AntiSpam.has(sender)) return client.sendMessage(from, IndSpam5S(`${_database.antispam}`.substring(0, 1)), MessageType.extendedText, { quoted: mess}) && Anti.add(sender)
+			if (IsCMD && !!Res.has(sender)) return
+			if (IsCMD && !!Reject.has(sender)) return client.sendMessage(from,  IndSpammer(), MessageType.extendedText, { quoted: mess}) && Res.add(sender)
+			if (IsCMD) Reject.add(sender)
             let usedPrefix: any
             for (const eventName in this.events) {
               const event = this.events[eventName]
@@ -85,14 +99,22 @@ export class Command {
                 try {
                   return void await event.callback(client, { args, _args, text, command, _text, match, ...data})
                 } catch(err) {
-                  reject(new CMDError(err, event))
+					if (IsCMD) Reject.delete(sender) && Res.delete(sender) && Anti.delete(sender) && AntiSpam.delete(sender)
+					reject(new CMDError(err, event))
                 } finally {
+					if (IsCMD) Reject.delete(sender) && Res.delete(sender)
+					AntiSpam.add(sender)
 					console.log(chalk.keyword('red')("\x1b[1;31m~\x1b[1;37m>"), chalk.keyword('blue')(`[\x1b[1;32m${chalk.hex('#009940').bold('RECORD')}]`), chalk.red.bold("\x1b[1;31m=\x1b[1;37m>"), chalk.cyan('\x1bmSTATUS :\x1b'), chalk.hex('#fffb00')(fromMe ? "SELF": "PUBLIK"), chalk.greenBright('[COMMAND]'), chalk.keyword('red')("\x1b[1;31m~\x1b[1;37m>"), chalk.blueBright(event.name.split("|")[1]), chalk.hex('#f7ef07')(`[${args?.length}]`), chalk.red.bold("\x1b[1;31m=\x1b[1;37m>"), chalk.hex('#26d126')('[PENGIRIM]'), chalk.hex('#f505c1')(pushname), chalk.hex('#ffffff')(`(${sender?.replace(/@s.whatsapp.net/i, '')})`), chalk.greenBright('IN'), chalk.hex('#0428c9')(`${groupMetadata.subject}`), chalk.keyword('red')("\x1b[1;31m~\x1b[1;37m>"), chalk.hex('#f2ff03')('[DATE] =>'), chalk.greenBright(Jam.split(' GMT')[0]))
+					setTimeout(() => {
+						AntiSpam.delete(sender)
+						Anti.delete(sender)
+					}, _database.antispam)
                 }
                 break
               }
             }
           } catch(err) {
+			if (data.IsCMD) Reject.delete(data.sender) && Res.delete(data.sender) && Anti.delete(data.sender) && AntiSpam.delete(data.sender)
             throw new CMDError(err)
           }
     })

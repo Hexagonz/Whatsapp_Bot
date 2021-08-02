@@ -1,12 +1,13 @@
-import { WAConnection, MessageType } from "@adiwajshing/baileys";
+import { WAConnection, MessageType, proto } from "@adiwajshing/baileys";
 import { Commands } from "../typings";
 import { Tomp3, Tocute, CreateSticker, toVideoV2,  Toimg, createStickerV2, createStickerV3 } from "../tools";
-import { Tunggu, Buffer, RandomName } from "../functions/function";
+import { Tunggu, Buffer, RandomName, CheckSticker, AddSticker } from "../functions/function";
 import { ToVideo } from "../routers/api";
 import * as fs from "fs";
-import { Client } from "../src/Client"
-import { IndTunggu,  IndBukanVid,  IndToVid, IndBukanAud, IndToCute, IndBukanSticker, IndGagalSticker, IndErrorMP3  } from "../lang/ind";
+import { Client } from "../src/Client";
+import { IndTunggu,  IndBukanVid,  IndToVid, IndBukanAud, IndToCute, IndBukanSticker, IndGagalSticker, IndErrorMP3,  IndStickerReply, StickerDuplicate, StickerFound } from "../lang/ind";
 
+const Stick: Map<string, { sender: string, id: number, filesha: string, mess: proto.WebMessageInfo}[]> = new Map()
 export class Converter {
 	constructor(public Ra: Client) {}
 	public async SendingConverter () {
@@ -18,38 +19,71 @@ export class Converter {
 	}
 	protected async Sticker () {
 		globalThis.CMD.on("converter|sticker", ["sticker", "s", "stiker", "stickergif", "stikergif", "sgif"], async (res: WAConnection, data: Commands) => {
-			const { args, media, from, mess, sendOwner } = data;
-			if (!media) return;
+			const { args, media, from, mess, sendOwner, isQuotedDokumen, Command, FileSha, sender } = data;
+			if (!media ||  isQuotedDokumen) return await this.Ra.reply(from,  IndStickerReply(Command), mess)
+			if (CheckSticker(from, FileSha, Stick)) {
+				const Hasil: { sender: string, id: number, filesha: string, mess: proto.WebMessageInfo}[] = Stick.get(from)
+				if (!Hasil) return console.log(Hasil)
+				const Respon: { sender: string, id: number, filesha: string, mess: proto.WebMessageInfo} = Hasil.find((value) => value.filesha === FileSha)
+				await this.Ra.sendTextWithMentions(from, StickerDuplicate(Respon.sender, Respon.id), [Respon.sender], mess)
+				await this.Ra.sendTextWithMentions(from, StickerFound(sender), [sender], Respon.mess)
+			}
+			if (CheckSticker(from, FileSha, Stick)) return
 			const Wm: string = args[0] === undefined ? undefined : args.join(" ")
 			await this.Ra.reply(from, IndTunggu(), mess)
 			const input: string = await res.downloadAndSaveMediaMessage(media,  "./lib/storage/temp/" + RandomName(22))
 			await CreateSticker(input, Wm).then(async (result: string | Error) => {
-				if (typeof result !== "string") return
-				await this.Ra.sendSticker(from, fs.readFileSync(result), mess)
-				await Tunggu(2000)
-				if (fs.existsSync(result)) fs.unlinkSync(result)
-				if (fs.existsSync(input)) fs.unlinkSync(input)
+				try {
+					if (typeof result !== "string") return
+					let ress: proto.WebMessageInfo  = await res.sendMessage(from,  fs.readFileSync(result), MessageType.sticker, { quoted: mess})
+					await AddSticker(ress, from, FileSha, sender, Stick)
+					await Tunggu(2000)
+					if (fs.existsSync(result)) fs.unlinkSync(result)
+					if (fs.existsSync(input)) fs.unlinkSync(input)
+				} catch (err) {
+					if (typeof result === "string" && fs.existsSync(result)) fs.unlinkSync(result)
+					if (fs.existsSync(input)) fs.unlinkSync(input)
+					// Jan dihapus ntar bocor
+				}
 			}).catch(async () => {
 				await CreateSticker(input, Wm).then(async (Res) => {
-					if (typeof Res !== "string") return
-					await this.Ra.sendSticker(from, fs.readFileSync(Res), mess)
-					await Tunggu(2000)
-					if (fs.existsSync(Res)) fs.unlinkSync(Res)
-					if (fs.existsSync(input)) fs.unlinkSync(input)
+					try {
+						if (typeof Res !== "string") return
+						let ress: proto.WebMessageInfo  = await res.sendMessage(from,  fs.readFileSync(Res), MessageType.sticker, { quoted: mess})
+						await AddSticker(ress, from, FileSha, sender, Stick)
+						await Tunggu(2000)
+						if (fs.existsSync(Res)) fs.unlinkSync(Res)
+						if (fs.existsSync(input)) fs.unlinkSync(input)
+					} catch (err) {
+						if (typeof Res === "string" && fs.existsSync(Res)) fs.unlinkSync(Res)
+						if (fs.existsSync(input)) fs.unlinkSync(input)
+					}
 				}).catch(async () => {
 					await createStickerV2(input, Wm).then(async (Result) => {
-						if (typeof Result !== "string") return
-						await this.Ra.sendSticker(from, fs.readFileSync(Result), mess)
-						await Tunggu(2000)
-						if (fs.existsSync(Result)) fs.unlinkSync(Result)
-						if (fs.existsSync(input)) fs.unlinkSync(input)
+						try {
+							if (typeof Result !== "string") return
+							let ress: proto.WebMessageInfo  = await res.sendMessage(from,  fs.readFileSync(Result), MessageType.sticker, { quoted: mess})
+							await AddSticker(ress, from, FileSha, sender, Stick)
+							await Tunggu(2000)
+							if (fs.existsSync(Result)) fs.unlinkSync(Result)
+							if (fs.existsSync(input)) fs.unlinkSync(input)
+						} catch (err) {
+							if (typeof Result === "string" && fs.existsSync(Result)) fs.unlinkSync(Result)
+							if (fs.existsSync(input)) fs.unlinkSync(input)
+						}
 					}).catch(async () => {
 						await createStickerV3(input, Wm).then(async (Res) => {
-							if (typeof Res !== "string") return
-							await this.Ra.sendSticker(from, fs.readFileSync(Res), mess)
-							await Tunggu(2000)
-							if (fs.existsSync(Res)) fs.unlinkSync(Res)
-							if (fs.existsSync(input)) fs.unlinkSync(input)
+							try {
+								if (typeof Res !== "string") return
+								let ress: proto.WebMessageInfo = await res.sendMessage(from,  fs.readFileSync(Res), MessageType.sticker, { quoted: mess})
+								await AddSticker(ress, from, FileSha, sender, Stick)
+								await Tunggu(2000)
+								if (fs.existsSync(Res)) fs.unlinkSync(Res)
+								if (fs.existsSync(input)) fs.unlinkSync(input)
+							} catch (err) {
+								if (typeof Res === "string" && fs.existsSync(Res)) fs.unlinkSync(Res)
+								if (fs.existsSync(input)) fs.unlinkSync(input)
+							}
 						}).catch((err) => {
 							if (fs.existsSync(input)) fs.unlinkSync(input)
 							this.Ra.reply(from, IndGagalSticker(), mess)
@@ -96,7 +130,7 @@ export class Converter {
 					this.Ra.sendAudio(from, fs.readFileSync(result), false, mess)
 					await Tunggu(2000)
 					if (fs.existsSync(result)) fs.unlinkSync(result)
-			}).catch(async (err) => {
+			}).catch(async () => {
 				await Tomp3(input).then(async (Respon) => {
 					if (typeof Respon !== "string") return
 					await this.Ra.sendAudio(from, fs.readFileSync(Respon), false, mess)

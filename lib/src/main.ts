@@ -1,16 +1,13 @@
 import { config } from "dotenv";
 config();
-import { WAChatUpdate, WAConnection, MessageType, proto } from "@adiwajshing/baileys";
+import { WAChatUpdate, WAConnection } from "@adiwajshing/baileys";
 import { HandlerMsg } from "./handler";
 import { HandlingMessage, Commands } from "../typings";
-import * as fs from "fs";
-import { isUrl, Buffer } from "../functions/function";
 import { Command } from "./command";
-import * as ts from "typescript";
-import util from "util"
-import {  Stalking } from "../messages";
+import {  Searching } from "../messages";
 import { Detector } from "./detector";
 import { Client } from "./Client";
+import { IndPublicSucces, IndPublicDuplicate } from "../lang/ind"
 
 
 
@@ -21,7 +18,7 @@ export class Main  {
 	public client: WAConnection = new WAConnection();
 	public message: HandlerMsg = new HandlerMsg(this.client);
 	public Ra: Client = new Client(this.client)
-	private Respon: Stalking  = new Stalking(this.Ra);
+	private Respon: Searching  = new Searching(this.Ra);
 	protected detector: Detector
 	constructor() {
 	}
@@ -29,19 +26,27 @@ export class Main  {
 		this.client.on("chat-update", async (chats: WAChatUpdate) => {
 			const data: HandlingMessage  | undefined= await  this.message.handling(chats)
 			if (data == undefined) return;
-			if (!data.isOwner || Public) return;
-			if (data.fromMe) return;
 			this.detector = new Detector(this.client, data)
+			this.detector.antiAll()
+			if (data.isBot) return;
+			if (!data.isOwner && !Public) return;
 			this.detector.Handling()
 			globalThis.prefix = data.Prefix
 			globalThis.CMD = new Command(globalThis.prefix)
-			this.Respon.Sendding()
-			CMD.on("owner|=>", /(?:)/, async (client: WAConnection, res: Commands ) => {
-				const convert: string = ts.transpile(`(async () => { ${res._text}})()`)
-				const send: string = util.format(eval(convert))
-				await client.sendMessage(res.from, send, MessageType.text, { quoted: res.mess})
-			},  { noPrefix: false, owner: true, prefix: /=>/})
-			await CMD.validate(data, this.client)
+			this.Respon.sendResponse()
+			this.detector.CommnadGlobal()
+			if (/^(publik|public)/i.test(data.Command)) {
+				if (/(on)/i.test(data.body.split(" ")[1])) {
+					if (Public) return this.Ra.reply(data.from, IndPublicDuplicate(true), data.mess)
+					Public = true
+					this.Ra.reply(data.from, IndPublicSucces(true), data.mess)
+				} else if (/(off)/i.test(data.body.split(" ")[1])){
+					if(!Public) return this.Ra.reply(data.from, IndPublicDuplicate(false), data.mess)
+					Public = false
+					this.Ra.reply(data.from, IndPublicSucces(false), data.mess)
+				}
+			}
+			return void await CMD.validate(data, this.client)
 		})
 	}
 }

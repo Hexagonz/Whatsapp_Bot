@@ -10,7 +10,7 @@ export class Client {
 	}
 	public async sendTextWithMentions(from: string, text: string, mentioned: string[], id?: proto.WebMessageInfo | undefined): Promise <void> {
 		try {
-			return  id ? void await this.Client.sendMessage(from, text, MessageType.text, { contextInfo: { mentionedJid: mentioned}}) : void await this.Client.sendMessage(from, text, MessageType.text, { contextInfo: { mentionedJid: mentioned}, quoted: id})
+			return  id ? void await this.Client.sendMessage(from, text, MessageType.text, { contextInfo: { mentionedJid: mentioned}, quoted: id}) : void await this.Client.sendMessage(from, text, MessageType.text, { contextInfo: { mentionedJid: mentioned}})
 		} catch (err) {
 			throw console.log(err)
 		}

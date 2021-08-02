@@ -98,7 +98,7 @@ export async function createStickerV2 (input: string, wm?: string): Promise <str
 export async function CreateSticker (input: string, wm?: string): Promise <string | Error> {
 	return new Promise(async (resolve, reject) => {
 		if (/^(mp4|gif)$/i.test(input.split(".")[2])) {
-			const output: string =  `./lib/storage/temp/${Date.now()}.webp`;
+			const output: string =  `./lib/storage/temp/${RandomName(22)}.webp`;
 			const exifPath: string = typeof wm == "string" ? `./lib/storage/exif/${RandomName(28)}` : `./lib/storage/exif/Ra_default_exif`;
 			await ffmpeg(input)
 			.inputFormat(`${input.split(".")[2]}`)
