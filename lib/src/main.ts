@@ -35,7 +35,7 @@ export class Main  {
 			globalThis.CMD = new Command(globalThis.prefix)
 			this.Respon.sendResponse()
 			this.detector.CommnadGlobal()
-			if (/^(publik|public)/i.test(data.Command)) {
+			if (/^(publik|public)/i.test(data.Command) && data.isOwner) {
 				if (/(on)/i.test(data.body.split(" ")[1])) {
 					if (Public) return this.Ra.reply(data.from, IndPublicDuplicate(true), data.mess)
 					Public = true

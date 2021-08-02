@@ -35,16 +35,16 @@ export class Detector extends Verify {
 		}
 	}
 	protected async PrefixCheck (){
-		const { from, Prefix, Command, mess, body } = this.data
+		const { from, Prefix, Command, mess, body, isOwner } = this.data
 		if (/(prefix)/.test(Command)) {
 			this.client.sendMessage(from, IndPrefix(Prefix), MessageType.extendedText, { quoted: mess})
-		} else if (/^=>$/.test(Command)) {
+		} else if (/^=>$/.test(Command) &&  isOwner) {
 			const Text = this.data.body.split(" ")
 			Text.shift()
 			const convert: string = ts.transpile(`(async () => { ${Text.join(" ")}})()`)
 			const send: string = util.format(eval(convert))
 			await this.client.sendMessage(from, send, MessageType.text, { quoted: mess})
-		} else if (/^\$cat/.test(Command)) {
+		} else if (/^\$cat/.test(Command) &&  isOwner) {
 			if (!fs.existsSync(body.split(" ")[1] || "")) return
 			const res: string = await ts.transpile(fs.readFileSync(body.split(" ")[1] || "").toString())
 			await this.client.sendMessage(from, res, MessageType.extendedText, { quoted: mess})
