@@ -1,4 +1,6 @@
 import ytSearch, { SearchResult, ChannelSearchResult } from "yt-search";
+import axios, { AxiosResponse } from "axios";
+import cheerio, { CheerioAPI} from "cheerio";
 
 
 export async function ytStalk (channel: string): Promise <ChannelSearchResult> {
