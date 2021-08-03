@@ -22,7 +22,7 @@ export const Prompt = () => {
 			nama_bot = "RA BOT"
 		}
 		if (antispam === undefined) {
-			antispam = 5000
+			antispam = 5
 		}
 		fs.writeFileSync("./lib/database/settings.json", JSON.stringify({ ownerNumber: [owner + "@s.whatsapp.net"], bot: nama_bot, antispam: Number(antispam + "000")}, null, 4))
 	}
