@@ -35,7 +35,7 @@ export class Command {
   public client: WAConnection
   public prefix: string | string[] | RegExp
   constructor(p: string | string[]) {
-    this.prefix = new RegExp(`^${typeof p == 'string' ? p : p.join('|')}`)
+    this.prefix = new RegExp(`^${typeof p == 'string' ? p : p.join('')}`)
   }
   
   public on(eventName: string, pattern, callback: any, _init: Init = {}) {
