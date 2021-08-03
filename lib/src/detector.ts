@@ -29,31 +29,34 @@ export class Detector extends Verify {
 	}
 	protected antiTroli () {
 		const { typeQuoted, mess, from, groupMetadata, sender, pushname, isBot } = this.data
+		if (!from) return
 		if (typeQuoted === MessageType.product && isBot) {
-			console.log(chalk.keyword('red')("\x1b[1;31m~\x1b[1;37m>"), chalk.keyword('blue')(`[\x1b[1;32m${chalk.hex('#009940').bold('TROLI DETECTED')}]`), chalk.red.bold("\x1b[1;31m=\x1b[1;37m>"), (`(${sender?.replace(/@s.whatsapp.net/i, '')})`), chalk.greenBright('IN'), chalk.hex('#0428c9')(`${from.endsWith("@g.us") ? groupMetadata.subject : pushname}`))
+			console.log(chalk.keyword('red')("\x1b[1;31m~\x1b[1;37m>"), chalk.keyword('blue')(`[\x1b[1;32m${chalk.hex('#009940').bold('TROLI DETECTED')}]`), chalk.red.bold("\x1b[1;31m=\x1b[1;37m>"), (`(${sender?.replace(/@s.whatsapp.net/i, '')})`), chalk.greenBright('IN'), chalk.hex('#0428c9')(`${from?.endsWith("@g.us") ? groupMetadata?.subject : pushname}`))
 			this.client.modifyChat(from, "clear")
 		}
 	}
 	protected async PrefixCheck (){
 		const { from, Prefix, Command, mess, body, isOwner } = this.data
+		if (!from) return
 		if (/(prefix)/.test(Command)) {
 			this.client.sendMessage(from, IndPrefix(Prefix), MessageType.extendedText, { quoted: mess})
 		} else if (/^=>$/.test(Command) &&  isOwner) {
-			const Text = this.data.body.split(" ")
-			Text.shift()
-			const convert: string = ts.transpile(`(async () => { ${Text.join(" ")}})()`)
+			const data: HandlingMessage = this.data
+			const Text = this.data?.body?.split(" ")
+			Text?.shift()
+			const convert: string = ts.transpile(`(async () => { ${Text?.join(" ")}})()`)
 			const send: string = util.format(eval(convert))
 			await this.client.sendMessage(from, send, MessageType.text, { quoted: mess})
 		} else if (/^\$cat/.test(Command) &&  isOwner) {
-			if (!fs.existsSync(body.split(" ")[1] || "")) return
-			const res: string = await ts.transpile(fs.readFileSync(body.split(" ")[1] || "").toString())
+			if (!fs.existsSync(body?.split(" ")[1] || "")) return
+			const res: string = await ts.transpile(fs.readFileSync(body?.split(" ")[1] || "").toString())
 			await this.client.sendMessage(from, res, MessageType.extendedText, { quoted: mess})
 		} 
 	}
 	private getRegister () {
-		AddRegister(this.data.sender)
+		AddRegister(this?.data?.sender || "")
 	}
 	private addHit () {
-		Addhit (this.data.sender)
+		Addhit (this.data.sender || "")
 	}
 }

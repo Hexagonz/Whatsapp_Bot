@@ -6,7 +6,7 @@ import { Stating } from "../functions/log";
 export const Prompt = () => {
 	if (!fs.existsSync("./lib/database/settings.json")) {
 		const Input = prompt({ sigint: false})
-		let owner: string | number  = Number(Input(chalk.yellow("Harap masukkan nomer owner bot (Nomer diawali dengan kode negara) : "))) || undefined
+		let owner: string | number | undefined  = Number(Input(chalk.yellow("Harap masukkan nomer owner bot (Nomer diawali dengan kode negara) : "))) || undefined
 		owner = owner ? Number(`${owner}`.replace(/\D/g,'')) : undefined
 		let nama_bot: string | undefined = Input(chalk.yellow("Masukkan Nama Bot anda : ")) || undefined
 		let antispam: string | number |undefined = Input(chalk.yellow("Masukkan jeda anti spam (Satuian detik example 7 <detik>): ")) || undefined

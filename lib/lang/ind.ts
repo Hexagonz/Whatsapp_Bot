@@ -1,5 +1,6 @@
 import { instaStalk, TiktokStalk } from "../typings";
 import { ChannelSearchResult } from "yt-search";
+import { WAGroupMetadata } from "@adiwajshing/baileys"
 
 export const IndTest = (): string => {
 	return `Test`
@@ -151,6 +152,8 @@ export const Indverifikasi = (status: number, otp: string): string => {
 		return `Kode verifikasi anda adalah ${otp}, anda baru bisa meminta kode lagi dalam 8 jam`
 	} else if (status === 4) {
 		return `Berhasil anda telah selesai melakukan verifikasi`
+	} else {
+		return ""
 	}
 }
 export const IndPublicSucces = (status: boolean): string => {
@@ -176,4 +179,78 @@ export const StickerDuplicate = (sender: string, posisi: number): string => {
 }
 export const StickerFound = (sender: string): string => {
 	return `Ini ka @${sender.replace("@s.whatsapp.net", "")} stickernya jangan menggunakan media yang sama`
+}
+export const BotGaAdmin = () => {
+	return `Maaf Bot bukan admin tidak bisa melaksanakan perintah`
+}
+export const PilihBukatutup = () => {
+	return `Format salah Pilih buka/tutup`
+}
+export const BukanDalamGroup = () => {
+	return `Maaf ka bot bukan Perintah ini hanya tersedia didalam group`
+}
+export const UserBaruOut = () => {
+	return `Maaf user tersebut baru baru ini keluar group anda tidak bisa memasukkannya`
+}
+export const UserDalamGroup = () => {
+	return `Maaf user tersebut telah berada didalam group`
+}
+export const UserGadaDalamGroup = () => {
+	return `Maaf user tersebut tidak ada didalam group`
+}
+export const UserPrivate = () => {
+	return `Maaf tidak dapat menginvit user tersebut kedalam group kemungkinan di private`
+}
+export const SuccesAdd= () => {
+	return `Succes add member ke group`
+}
+export const AddHarapTagSeseorang = () => {
+	return `Maaf ka harap tag/ reply seseorang yang ingin ditambahkan`
+}
+export const TagOrReply = () => {
+	return `Maaf ka Harap tag/reply seseorang`
+}
+export const isOwnerGroupNokick = () => {
+	return `Maaf Bot tidak dapat mengeluarkan owner group`
+}
+export const kickSucces = (sender: string) => {
+	return `Berhasil mengeluarkan @${sender.replace("@s.whatsapp.net", "")}`
+}
+export const Admindia = (sender: string) => {
+	return `Tidak dapat mengeluarkan @${sender.replace("@s.whatsapp.net", "")} karena sesama admin, Hanya owner group yang bisa mengeluarkan admin`
+}
+export const ButakahLinkGc = () => {
+	return `Butakah ? di deskripsi group ada tod, caper caper`
+}
+export const IndLinkGroup = (groupMetadata: WAGroupMetadata, link: string) => {
+	return `
+Group : ${groupMetadata.subject}
+Link: ${link}`
+}
+export const SuccesOpenCloseGc = (Status: boolean) => {
+	return Status ? "Berhasil menutup group" : "Berhasil membuka group"
+}
+export const PromoteSuccess = (tag: string) => {
+	return `Berhasil menjadikan ${tag.replace("@s.whatsapp.net", "")} seorang admin`
+}
+export const DemoteSuccess = (tag: string) => {
+	return `Berhasil menurunkan jabatan ${tag.replace("@s.whatsapp.net", "")}`
+}
+export const PromoteDiaAdmin = (tag: string) => {
+	return `Anda tidak dapat menaikkan jabatan ${tag.replace("@s.whatsapp.net", "")} karena dia sudah menjadi admin`
+}
+export const DemoteBukanAdmin = (tag: string) => {
+	return `Gagal, anda tidak dapat menurunkan jabatan ${tag.replace("@s.whatsapp.net", "")} karena dia bukan admin`
+} 
+export const GagalUpdatePP = () => {
+	return `Terjadi kesalahan saat ingin mengubah profile grup`
+}
+export const SuccesUpdatePP = () => {
+	return `Berhasil mengubah foto profil group`
+}
+export const SuccesSetName = (nama: string) => {
+	return `Berhasil mengubah nama  menjadi ${nama}`
+}
+export const SuccesSetDesk = () => {
+	return `Berhasil mengubah deskripsi group`
 }

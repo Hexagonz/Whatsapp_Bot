@@ -31,14 +31,17 @@ export class UserHandler extends Convert {
 	private setPrefix () {
 		globalThis.CMD.on("user|setprefix", ["setprefix"], (res: WAConnection, data: Commands) => {
 			const { from, mess, sender, args } = data
+			if (!sender) return
 			const hasil = setPrefix(args[0], sender)
-			this.Ra.reply (from, IndSuccesSetPrefix(hasil, statusPrefix(sender)),mess)
+			this.Ra.reply (from, IndSuccesSetPrefix(hasil || "", statusPrefix(sender)),mess)
 		}, { noPrefix: false })
 	}
 	private checkMulti () {
 		globalThis.CMD.on("user|cekmulti", "cekmulti", (res: WAConnection, data: Commands) => {
 			const { from, mess, sender, args } = data
-			const hasil = getMulti(sender)
+			if (!sender) return
+			const hasil: string | undefined = getMulti(sender)
+			if (typeof hasil !== "string") return
 			this.Ra.reply(from, IndMultiData(hasil), mess)
 		})
 	}
@@ -46,6 +49,7 @@ export class UserHandler extends Convert {
 		globalThis.CMD.on("user|addmulti", ["addmulti"], (res: WAConnection, data: Commands) => {
 			const { from, mess, sender, args } = data
 			if (args[0] == undefined) return this.Ra.reply(from, IndErrPushMulti(), mess)
+			if (!sender) return
 			addPrefixMulti(sender, args[0])
 			this.Ra.reply(from, IndDonePushMulti(args[0]), mess)
 		}, { noPrefix: false})
@@ -53,6 +57,7 @@ export class UserHandler extends Convert {
 	private delPrefix () {
 		globalThis.CMD.on("user|delmulti", ["delmulti"], (res: WAConnection, data: Commands) => {
 			const { from, mess, sender, args } = data
+			if (!sender) return
 			if (args[0] == undefined) return this.Ra.reply(from, IndErrDelMulti(), mess)
 			delPrefixMulti(sender, args[0])
 			this.Ra.reply(from, IndDoneDelMulti(args[0]), mess)
@@ -61,6 +66,7 @@ export class UserHandler extends Convert {
 	private multiPrefix () {
 		globalThis.CMD.on("user|multi", ["multi"],  (res: WAConnection, data: Commands) => {
 			const { from, mess, sender, args } = data
+			if (!sender) return
 			if (args[0] == "on") {
 				multiPrefix(true, sender)
 				this.Ra.reply(from, IndSuccesSetMulti(true), mess)
@@ -79,6 +85,7 @@ export class UserHandler extends Convert {
 			let Owner: string[] = ["=>", "$cat", "publik/public <on/off>"]
 			let Storage: string[] = []
 			let Stalker: string[] = []
+			let Group: string[] = []
 			_typeMenu.map((value: string) => {
 				if (value.startsWith("converter")) {
 					Converter.push(value.split("|")[1])
@@ -90,6 +97,8 @@ export class UserHandler extends Convert {
 					Storage.push(value.split("|")[1])
 				} else if (value.startsWith("stalk")) {
 					Stalker.push(value.split("|")[1])
+				} else if (value.startsWith("admingc")) {
+					Group.push(value.split("|")[1])
 				}
 			})
 			let informasi: string = `
@@ -102,7 +111,7 @@ export class UserHandler extends Convert {
 *🍃 Speed* : ${Ping}
 *🪀 Owner* : @33753045534 ( *Ra* )
 *🌄 Lib* : Baileys
-*♦️ Hit User* : ${getHit(sender)}
+*♦️ Hit User* : ${getHit(sender || "")}
 *📜 Language :* Typescript
 *⚔️ Prefix :* ${Prefix}
 *🔑 Apikey* : 𝐍𝐨𝐭 𝐅𝐨𝐮𝐧𝐝
@@ -127,6 +136,10 @@ for (let result of Storage.sort()) {
 informasi += "\n         *MENU STALK*\n\n";
 for (let result of Stalker.sort()) {
 	informasi  += `*ℒ⃝🕊️ •* *` + Prefix  + result + "*\n"
+}
+informasi += "\n         *MENU ADMIN GROUP*\n\n";
+for (let result of Group.sort()) {
+	informasi += `*ℒ⃝🕊️ •* *` + Prefix  + result + "*\n"
 }
 informasi += `\n\n__________________________________
 *Notes :*

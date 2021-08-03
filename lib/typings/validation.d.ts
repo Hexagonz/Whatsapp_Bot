@@ -1,9 +1,9 @@
 import { proto, WAMessage } from "@adiwajshing/baileys"
 
 export declare class Validasi {
-	from: string;
+	from: string | null | undefined;
 	message: proto.IFutureProofMessage | undefined
-	isGroupMsg: boolean;
+	isGroupMsg: boolean | undefined;
 	type: string;
 	quotedType: string[] | null;
 	typeQuoted: string;
@@ -13,7 +13,8 @@ export declare class Validasi {
 	body: string | null | undefined;
 	media: WAMessage | null;
 	sender: string | null | undefined;
-	Filesize: number | Long;
-	FileSha: string | null
+	Filesize: number | Long | undefined | null;
+	FileSha: string | null | undefined
 	Command: string
+	mentioned: string[] | undefined
 }

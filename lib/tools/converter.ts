@@ -42,9 +42,10 @@ export async function Tomp3 (input: string): Promise <string | Error>{
 }
 export async function Toimg (input: string): Promise <string> {
 	return new Promise (async (resolve, reject) => {
-		const Path = "./lib/storage/temp/" + Date.now() + ".png"
+		const Path = "./lib/storage/temp/" + RandomName(18) + ".png"
 	exec(`ffmpeg -i ${input} ${Path}`, async (err, call) => {
-		if (err) return console.log(err);
+		if (err) throw reject(err)
+		if (fs.existsSync(input)) fs.unlinkSync(input)
 		if (fs.existsSync(Path)) return resolve(Path)
 	})
 	})

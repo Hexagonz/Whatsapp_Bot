@@ -30,10 +30,12 @@ export async function Y2mateVid (url: string): Promise<{ link: string, thumb: st
 				data: new URLSearchParams(Object.entries(Format))
 			})
 			const $: CheerioAPI = cheerio.load(data.data.result)
+			const IdYt: RegExpExecArray | null =  ytIdRegex?.exec(url)
+			if (!IdYt) return
 			const convert: { type: string, _id: string, v_id: string, ajax: number, token: string, ftype: string, fquality: string} | any = {
 				type: "youtube",
 				_id: data.data.result.split(/var k__id = /)[1].split("; ")[0].replace(/"/gi, ""),
-				v_id: ytIdRegex.exec("https://youtu.be/xUm6uMf-9xI")[1],
+				v_id: IdYt,
 				ajax: 1,
 				token: "",
 				ftype: "mp4",
@@ -49,8 +51,8 @@ export async function Y2mateVid (url: string): Promise<{ link: string, thumb: st
 			})
 			const ch: CheerioAPI = cheerio.load(Upload.data.result)
 			const result: { link: string, thumb: string, size: string} = {
-				link: ch("div").find("a").attr("href"),
-				thumb: $("div.thumbnail.cover").find("a > img").attr("src"),
+				link: ch("div").find("a").attr("href") || "",
+				thumb: $("div.thumbnail.cover").find("a > img").attr("src") || "",
 				size:  $("#mp4 > table > tbody > tr:nth-child(2) > td:nth-child(2)").text(),
 			}
 			resolve(result)
@@ -80,7 +82,7 @@ export async function keepVideoMP4 (Url: string): Promise <{ link: string, size:
 				}
 			})
 			const $: CheerioAPI = cheerio.load(res.data)
-			const Sid: string = $("#page-top > main").find("script:nth-child(10)").html()
+			const Sid: string = $("#page-top > main").find("script:nth-child(10)").html() || ""
 			const data: AxiosResponse = await axios({
 				url: "https://keepv.id//",
 				method: "POST",
@@ -92,7 +94,7 @@ export async function keepVideoMP4 (Url: string): Promise <{ link: string, size:
 			})
 			const ch: CheerioAPI = cheerio.load(data.data)
 			const Format: { link: string, size: string} = {
-				link: ch("#moreOptions > h6:nth-child(3) > div > div:nth-child(1)").find("table:nth-child(2) > tbody > tr > td.text-right > a").attr("href"),
+				link: ch("#moreOptions > h6:nth-child(3) > div > div:nth-child(1)").find("table:nth-child(2) > tbody > tr > td.text-right > a").attr("href") || "",
 				size: ch("#moreOptions > h6:nth-child(3) > div > div:nth-child(1)").find("table:nth-child(2) > tbody > tr > td:nth-child(3)").text().trim()
 			}
 			resolve(Format)

@@ -25,11 +25,14 @@ export class Validation  {
 		const Command: string =  body?.toLowerCase().split(/ +/g)[0] || "";
 		const media: WAMessage | null = message?.message?.imageMessage || message?.message?.videoMessage ? message : message?.message?.extendedTextMessage?.contextInfo?.quotedMessage?.imageMessage || message?.message?.extendedTextMessage?.contextInfo?.quotedMessage?.videoMessage || message?.message?.extendedTextMessage?.contextInfo?.quotedMessage?.stickerMessage ?
 		JSON.parse(JSON.stringify(message).replace('quotedM', 'm')).message?.extendedTextMessage?.contextInfo : null;
+		const mentioned: string[] | undefined[] = message?.message?.extendedTextMessage?.contextInfo?.mentionedJid && message.message.extendedTextMessage.contextInfo.mentionedJid.length > 0 ? message.message.extendedTextMessage.contextInfo.mentionedJid :
+		message?.message?.extendedTextMessage?.contextInfo?.quotedMessage && message.message.extendedTextMessage.contextInfo.participant ? [message.message.extendedTextMessage.contextInfo.participant] : [];
 		const sender: string | null | undefined = chats?.key.fromMe ? this.client.user.jid : isGroupMsg ? chats?.participant : chats?.key.remoteJid;
-		const FileSha: string | null = media === null ? null : media.message.imageMessage ? media.message.imageMessage.fileSha256.toString() : media.message.videoMessage ? media.message.videoMessage.fileSha256.toString() : media.message.audioMessage ? media.message.audioMessage.fileSha256.toString() : media.message.stickerMessage ? media.message.stickerMessage.fileSha256.toString() : media.message.documentMessage ? media.message.documentMessage.fileSha256.toString() : null
-		const Filesize: number | Long = media ? media.message ? media.message.audioMessage ? media.message.audioMessage.fileLength : media.message.imageMessage ? media.message.imageMessage.fileLength : media.message.videoMessage ? media.message.videoMessage.fileLength : media.message.documentMessage ? media.message.documentMessage.fileLength : 0 : null : null
+		const fileSha: Uint8Array | null | undefined = message?.message?.imageMessage ? message.message.imageMessage.fileSha256 : message?.message?.videoMessage ? message?.message?.videoMessage?.fileSha256 : message?.message?.stickerMessage ? message.message.stickerMessage.fileSha256 : message?.message?.audioMessage ? message.message.audioMessage.fileSha256 : null
+		const FileSha: string | null | undefined = fileSha !== null ? fileSha?.toString() : null
+		const Filesize: number | Long | undefined | null = media ? media.message ? media.message.audioMessage ? media.message.audioMessage.fileLength : media.message.imageMessage ? media.message.imageMessage.fileLength : media.message.videoMessage ? media.message.videoMessage.fileLength : media.message.documentMessage ? media.message.documentMessage.fileLength : 0 : null : null
 		const Format: Validasi = {
-			from, message, isGroupMsg, type, quotedType, typeQuoted, quotedMsg, bodyQuoted, bodyButton: CommandButton, body, media, sender, Filesize, FileSha, Command
+			from, message, isGroupMsg, type, quotedType, typeQuoted, quotedMsg, bodyQuoted, bodyButton: CommandButton, body, media, sender, Filesize, FileSha, Command,  mentioned
 		}
 		return Format
 		}

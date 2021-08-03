@@ -56,7 +56,7 @@ export const InstaStalkV2 = async (username: string): Promise <instaStalk> => {
 export const InstaStalkV3 = async (username: string): Promise <instaStalk> => {
 	return new Promise (async (resolve, reject) => {
 		try {
-			let Format: instaStalk;
+			let Format: instaStalk | any;
 			const data: AxiosResponse = await axios.get(`https://www.instagram.com/${username}/`, {
 				headers: {
 					"user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36"
@@ -65,7 +65,9 @@ export const InstaStalkV3 = async (username: string): Promise <instaStalk> => {
 			if (data.status !== 200) return reject(new Error(`Error status code : ${data.status}`))
 			const $: CheerioAPI= cheerio.load(data.data)
 			try {
-				const script: string = $("script").eq(3).html();
+				const script: string | null = $("script").eq(3).html();
+				let Regex: RegExpExecArray | null= /window\._sharedData = (.+);/g.exec(script || "")
+				if(Regex == null) return
 				const {
 					entry_data: {
 						ProfilePage: {
@@ -74,7 +76,7 @@ export const InstaStalkV3 = async (username: string): Promise <instaStalk> => {
 							},
 						},
 					},
-				} = JSON.parse(/window\._sharedData = (.+);/g.exec(script)[1]);
+				} = JSON.parse(Regex[1]);
 				Format = {
 					id: user.id,
 					username:  user.username,
@@ -89,7 +91,9 @@ export const InstaStalkV3 = async (username: string): Promise <instaStalk> => {
 					total_post: user. edge_owner_to_timeline_media.count
 				}
 			} catch (err) {
-				const script: string = $("script").eq(4).html();
+				const script: string | null = $("script").eq(4).html();
+				let Regex: RegExpExecArray | null= /window\._sharedData = (.+);/g.exec(script || "")
+				if(Regex == null) return
 				const {
 					entry_data: {
 						ProfilePage: {
@@ -98,7 +102,7 @@ export const InstaStalkV3 = async (username: string): Promise <instaStalk> => {
 							},
 						},
 					},
-				} = JSON.parse(/window\._sharedData = (.+);/g.exec(script)[1]);
+				} = JSON.parse(Regex[1]);
 				Format = {
 					id: user.id,
 					username:  user.username,

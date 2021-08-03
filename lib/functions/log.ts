@@ -1,6 +1,6 @@
 import chalk from "chalk"
 
-const color = (text, color) => {
+const color = (text: string, color: string) => {
     return !color ? chalk.green(text) : chalk.keyword(color)(text)
 }
 export function Stating (owner: string | number, nama_bot: string) {

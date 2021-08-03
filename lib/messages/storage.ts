@@ -22,7 +22,9 @@ export class Storager extends  UserHandler {
 			const { isQuotedAudio, isQuotedVideo, isQuotedSticker, isQuotedImage, isVideo, isAudio, isGambar, media, Filesize, sender, args, isOwner, from, mess, Prefix } = data
 			if (args[0] == undefined) return this.Ra.reply(from, IndMasukkanId(), mess)
 			if (media && isQuotedAudio || isQuotedVideo || isQuotedSticker || isQuotedImage || isVideo || isAudio || isGambar) {
-				const size: any = filesize(Filesize, { output: "object"})
+				if (!media) return
+				if (!sender) return
+				const size: any = filesize(Filesize || 0, { output: "object"})
 				if (!/(MB|KB|B)/i.test(size.symbol)) return this.Ra.sendTextWithMentions(from, IndFileGede(sender), [sender], mess)
 				if (size.value >= 50.00 && size.symbol == "MB") return this.Ra.sendTextWithMentions(from, IndFileGede(sender), [sender], mess)
 				const Path: string = "./lib/storage/public/" + sender.replace(/@s.whatsapp.net/gi, "") + args[0]
@@ -30,7 +32,7 @@ export class Storager extends  UserHandler {
 					const total: number = call.filter((duh: string) => duh.startsWith(sender.replace(/@s.whatsapp.net/gi, ""))).length
 					if (!isOwner && total >= 4) return this.Ra.reply(from, LimitStorage(), mess)
 					const Check: string[] = call.filter(v => v.startsWith(sender.replace(/@s.whatsapp.net/gi, "")))
-					if (call.find(v => v.startsWith(sender.replace(/@s.whatsapp.net/gi, "") + args[0]))) return this.Ra.reply(from,  IndIdDuplicate(), mess)
+					if (call.find(v => v.startsWith(sender?.replace(/@s.whatsapp.net/gi, "") + args[0]))) return this.Ra.reply(from,  IndIdDuplicate(), mess)
 					if (Check[0] == undefined) {
 						await res.downloadAndSaveMediaMessage(media, Path)
 						await this.Ra.reply(from, IndSuccesSave(args[0], Prefix, isOwner, (total + 1)), mess)
@@ -45,6 +47,7 @@ export class Storager extends  UserHandler {
 	private async checkMedia () {
 		globalThis.CMD.on("storage|check", "check", (res: WAConnection, data: Commands) => {
 			const { from, sender, mess} = data
+			if (!sender) return 
 			fs.readdir("./lib/storage/public/", async (err, call) => {
 				const data = call.filter(v => v.startsWith(sender.replace(/@s.whatsapp.net/gi, "")))
 				await this.Ra.reply(from,  IndCheckStorage (data, sender.replace(/@s.whatsapp.net/gi, "")), mess)
@@ -56,6 +59,7 @@ export class Storager extends  UserHandler {
 			const { sender, args, from, mess } = data
 			if ( isUrl(args[0])) return
 			if (args[0] == undefined) return res.sendMessage(from, IndMasukkanId(), MessageType.text, { quoted: mess})
+			if (!sender) return
 			fs.readdir("./lib/storage/public/", async (err, call) => {
 				const data: string[] = call.filter(v => v.startsWith(sender.replace(/@s.whatsapp.net/gi, "") + args[0]))
 				if (data) {

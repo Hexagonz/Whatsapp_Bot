@@ -21,19 +21,24 @@ export class HandlerMsg extends Validation {
 			const fromMe: boolean | undefined | null = mess?.key ? mess.key.fromMe : false
 			const isBot: boolean | undefined = mess?.key ? mess.key.id?.startsWith("3EB0") : false
 			const botNumber: string = this.client.user.jid;
-			const bot: WAGroupParticipant | {} = isGroupMsg ? groupMetadata.participants.find(v=> v.jid === this.client.user.jid) : {}
-			const user: WAGroupParticipant | {} = isGroupMsg ? groupMetadata.participants.find(v=> v.jid === this.client.user.jid) : {}
+			const bot: WAGroupParticipant | {} | undefined = isGroupMsg ? groupMetadata?.participants.find(v=> v.jid === this.client.user.jid) : {}
+			const user: WAGroupParticipant | {}| undefined  = isGroupMsg ? groupMetadata?.participants.find(v=> v.jid === this.client.user.jid) : {}
 			_database.ownerNumber.push(botNumber)
 			const ownerNumber: string[] = _database.ownerNumber
 			const sendOwner: string = ownerNumber[0]
 			const isOwner: boolean = ownerNumber.includes(sender || "");
-			const isMedia: boolean =  (type === 'imageMessage' || type === 'videoMessage');
+			const groupMember: WAGroupParticipant[] | null | undefined = isGroupMsg ? groupMetadata?.participants : null
+			const groupAdmins: string[]  =  isGroupMsg ?  groupMember !== null ? groupMember?.filter((value) => value.isAdmin == true) ? groupMember.filter((value) => value.isAdmin == true).map((value) => value.jid) : [] : [] : [];
+			const isGroupAdmins: boolean = isGroupMsg ? groupAdmins.includes(sender || "") : false
+			const isBotAdmins: boolean = isGroupMsg ? groupAdmins.includes(botNumber) : false
+			const ownerGroup: string | null | undefined = isGroupMsg ? groupMetadata?.owner : null
+ 			const isMedia: boolean =  (type === 'imageMessage' || type === 'videoMessage');
 			const isGambar: boolean = (type === "imageMessage");
 			const isVideo: boolean = (type === "videoMessage");
 			const isAudio: boolean = (type === "audioMessage");
 			const Jam: string = moment(new Date()).format("LLLL");
-			const command: string =  body.toLowerCase().split(/ +/g)[0] || "";
-			const Prefix: string = getPRefix(sender, command);
+			const command: string =  body?.toLowerCase().split(/ +/g)[0] || "";
+			const Prefix: string = getPRefix(sender || "", command);
 			const IsCMD: boolean = command.startsWith(Prefix);
 			const isQuotedSticker: boolean = type === 'extendedTextMessage' && content.includes('stickerMessage');
 			const isQuotedImage: boolean = type === 'extendedTextMessage' && content.includes('imageMessage');
@@ -54,6 +59,11 @@ export class HandlerMsg extends Validation {
 				sendOwner,
 				Jam,
 				Prefix,
+				groupAdmins,
+				groupMember,
+				isGroupAdmins,
+				isBotAdmins,
+				ownerGroup,
 				IsCMD,
 				isMedia,
 				isGambar,

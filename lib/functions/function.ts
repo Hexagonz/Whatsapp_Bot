@@ -77,9 +77,9 @@ export function CheckCommand (Patert: string, Prefix: string, isOwner: boolean):
 
 export function CheckSticker (from: string, FileSha: string, Stick: Map<string, { sender: string, id: number, filesha: string, mess: proto.WebMessageInfo}[]>): boolean {
 	let status: boolean = false
-	const hasil: { sender: string, id: number, filesha: string, mess: proto.WebMessageInfo}[] = Stick.get(from)
+	const hasil: { sender: string, id: number, filesha: string, mess: proto.WebMessageInfo}[] | undefined = Stick.get(from)
 	if (!hasil) return status
-	const result: { sender: string, id: number, filesha: string, mess: proto.WebMessageInfo} = hasil.find((x) => x.filesha === FileSha)
+	const result: { sender: string, id: number, filesha: string, mess: proto.WebMessageInfo } | undefined = hasil.find((x) => x.filesha === FileSha)
 	if (result) {
 		status = true
 	}
@@ -87,8 +87,8 @@ export function CheckSticker (from: string, FileSha: string, Stick: Map<string, 
 }
 export async function AddSticker (Key: proto.WebMessageInfo, from: string, FileSha: string, sender: string, Stick: Map<string, { sender: string, id: number, filesha: string, mess: proto.WebMessageInfo}[]>): Promise <void> {
 	if (Stick.has(from)) {
-		const hasil: { sender: string, id: number, filesha: string, mess: proto.WebMessageInfo}[]= Stick.get(from)
-		if (hasil.length === 3) {
+		const hasil: { sender: string, id: number, filesha: string, mess: proto.WebMessageInfo}[] | undefined= Stick.get(from)
+		if (hasil?.length === 3) {
 			let respon: { sender: string, id: number, filesha: string, mess: proto.WebMessageInfo}[] = []
 			hasil.map((x) => {
 				if (x.id == 1) return
@@ -96,13 +96,15 @@ export async function AddSticker (Key: proto.WebMessageInfo, from: string, FileS
 				respon.push(x)
 			})
 			Stick.set(from, [...respon, { sender: sender, id: 3, filesha: FileSha, mess: Key}])
-		} else if (hasil.length === 2) {
-			const hasil: { sender: string, id: number, filesha: string, mess: proto.WebMessageInfo}[] = Stick.get(from)
+		} else if (hasil?.length === 2) {
+			const hasil: { sender: string, id: number, filesha: string, mess: proto.WebMessageInfo}[] | undefined = Stick.get(from)
+			if (hasil == undefined) return
 			Stick.set(from, [...hasil, { sender: sender, id: 3, filesha: FileSha, mess: Key}])
-		} else if (hasil.length === 1) {
-			const hasil: { sender: string, id: number, filesha: string, mess: proto.WebMessageInfo}[] = Stick.get(from)
+		} else if (hasil?.length === 1) {
+			const hasil: { sender: string, id: number, filesha: string, mess: proto.WebMessageInfo}[] | undefined = Stick.get(from)
+			if (hasil == undefined) return
 			Stick.set(from, [...hasil, { sender: sender, id: 2, filesha: FileSha, mess: Key}])
-		} else if (hasil.length === 0) {
+		} else if (hasil?.length === 0) {
 			Stick.set(from, [{ sender: sender, id: 1, filesha: FileSha, mess: Key}])
 		}
 	} else {

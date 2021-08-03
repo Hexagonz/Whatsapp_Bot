@@ -19,7 +19,7 @@ export class Main  {
 	public message: HandlerMsg = new HandlerMsg(this.client);
 	public Ra: Client = new Client(this.client)
 	private Respon: Searching  = new Searching(this.Ra);
-	protected detector: Detector
+	protected detector: any
 	constructor() {
 	}
 	public Response () {
@@ -36,14 +36,15 @@ export class Main  {
 			this.Respon.sendResponse()
 			this.detector.CommnadGlobal()
 			if (/^(publik|public)/i.test(data.Command) && data.isOwner) {
-				if (/(on)/i.test(data.body.split(" ")[1])) {
-					if (Public) return this.Ra.reply(data.from, IndPublicDuplicate(true), data.mess)
+				let Body: string =  data.body ? data.body : ""
+				if (/(on)/i.test(Body.split(" ")[1])) {
+					if (Public) return this.Ra.reply(data.from || "", IndPublicDuplicate(true), data.mess)
 					Public = true
-					this.Ra.reply(data.from, IndPublicSucces(true), data.mess)
-				} else if (/(off)/i.test(data.body.split(" ")[1])){
-					if(!Public) return this.Ra.reply(data.from, IndPublicDuplicate(false), data.mess)
+					this.Ra.reply(data.from || "", IndPublicSucces(true), data.mess)
+				} else if (/(off)/i.test(Body.split(" ")[1])){
+					if(!Public) return this.Ra.reply(data.from || "", IndPublicDuplicate(false), data.mess)
 					Public = false
-					this.Ra.reply(data.from, IndPublicSucces(false), data.mess)
+					this.Ra.reply(data.from || "", IndPublicSucces(false), data.mess)
 				}
 			}
 			return void await CMD.validate(data, this.client)

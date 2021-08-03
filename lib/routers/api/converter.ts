@@ -70,7 +70,7 @@ export async function videoToWebp (input: string): Promise <{ status: number, da
 		if (upload.status !== 200) return reject(new Error("ERROR Status Code: " + upload.status))
 		const $: CheerioAPI = cheerio.load(upload.data)
 		const NamaFile: string | undefined = $('form').find('input[type=hidden]:nth-child(1)').attr('value')
-		const Format: { file: string | undefined, token: string | undefined, convert: string| undefined, size: string, fps: string, loop: string, start: string, end: string}  = {
+		const Format: { file: string | undefined, token: string | undefined, convert: string| undefined, size: string, fps: string, loop: string, start: string, end: string} | any  = {
 			file: NamaFile,
 			token: $('form').find(' input[type=hidden]:nth-child(2)').attr('value'),
 			convert: $("#tool-submit-button").find("input").attr("value"),
@@ -111,7 +111,7 @@ export async function ToGif (file: string): Promise <{ status: number, data: str
 		if (upload.status !== 200) return  reject(new Error("ERROR STATUS CODE : " + upload.status))
 		const $: CheerioAPI = cheerio.load(upload.data)
 		const NamaFile: string | undefined = $('form').find('input[type=hidden]:nth-child(1)').attr('value')
-		const Format: { file: string | undefined, token: string | undefined } = {
+		const Format: { file: string | undefined, token: string | undefined }| any = {
 			file: NamaFile,
 			token: $('form').find(' input[type=hidden]:nth-child(2)').attr('value')
 		}
@@ -179,7 +179,7 @@ export async function pngToWebp (File: string): Promise <{ status: number, hasil
 			if (upload.status !== 200) return  reject(new Error(`Error status code : ${upload.status}`))
 			const $: CheerioAPI = cheerio.load(upload.data)
 			const NamaFile: string | undefined = $('form').find('input[type=hidden]:nth-child(1)').attr('value')
-			const Format: { file: string | undefined, token: string | undefined }  = {
+			const Format: { file: string | undefined, token: string | undefined } | any  = {
 				file: NamaFile,
 				token: $('form').find(' input[type=hidden]:nth-child(2)').attr('value')
 			}

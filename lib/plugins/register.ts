@@ -10,7 +10,7 @@ export const AddRegister = (sender: string): unknown => {
 		id: sender,
 		status: false,
 		hit: 1,
-		prefix:  ["@", "#", "$", "%", "°", "•", "π", "÷", "×", "¶", "+", "∆", "£", "¢", "€", "¥", "®", "™", "✓", "_", "=", "|", "~", "!", "?", "^", "&", ".", "©", "^"],
+		prefix:  ["@", "#", "$", "%", "°", "•", "π", "÷", "×", "¶", "∆", "£", "¢", "€", "¥", "®", "™", "✓", "_", "=", "|", "~", "!", "^", "&", ".", "©","'", '"', "`"],
 		multi: true,
 		Prefix: "."
 	}
@@ -43,7 +43,7 @@ export const getHit = (id: string): number => {
 		return 0
 	}
 }
-export const setPrefix = (Prefix: string | undefined, sender: string): string => {
+export const setPrefix = (Prefix: string | undefined, sender: string): string | undefined => {
 	const posisi: number = _database.findIndex((value: Registrasi) => value.id == sender)
 	if (posisi !== -1) {
 		_database[posisi].Prefix = Prefix ? Prefix : "."

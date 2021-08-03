@@ -1,5 +1,5 @@
 import { Validasi } from ".";
-import { proto, WAMessage, WAGroupMetadata } from "@adiwajshing/baileys"
+import { proto, WAMessage, WAGroupMetadata, WAGroupParticipant } from "@adiwajshing/baileys"
 
 export interface  HandlingMessage {
 	from: string | null | undefined;
@@ -15,7 +15,8 @@ export interface  HandlingMessage {
 	media: WAMessage | null;
 	sender: string | null | undefined
 	mess: proto.WebMessageInfo | undefined
-	FileSha: string | null 
+	FileSha: string | null  | undefined
+	mentioned: string[]  | undefined
 	groupMetadata: WAGroupMetadata | null
 	botNumber: string;
 	isBot: boolean | undefined;
@@ -25,6 +26,11 @@ export interface  HandlingMessage {
 	Command: string;
 	Jam: string;
 	Prefix: string;
+	groupAdmins: string[] 
+	groupMember: WAGroupParticipant[] | null | undefined
+	isGroupAdmins: boolean;
+	ownerGroup:  string | null | undefined
+	isBotAdmins: boolean;
 	IsCMD: boolean 
 	pushname: string;
 	bot: any;
@@ -59,17 +65,23 @@ export declare class Commands {
 	media: WAMessage | null;
 	sender: string | null | undefined
 	Filesize: number | null
-	FileSha: string | null 
+	FileSha: string | null
+	mentioned: string[]  | undefined
+	groupAdmins: string[]
+	groupMember: WAGroupParticipant[] | null | undefined
 	Command: string
 	mess: proto.WebMessageInfo | undefined;
 	bot: isBOT;
 	user: isUser;
 	groupMetadata: WAGroupMetadata | null
 	botNumber: string;
+	isGroupAdmins: boolean;
+	isBotAdmins: boolean;
 	isBot: boolean | undefined;
 	fromMe: boolean | undefined | null;
 	isOwner: boolean;
 	sendOwner: string;
+	ownerGroup: string | null | undefined
 	pushname: string;
 	Jam: string;
 	Prefix: string;
