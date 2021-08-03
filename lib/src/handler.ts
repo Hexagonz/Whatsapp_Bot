@@ -5,7 +5,6 @@ import moment from "moment-timezone";
 import { getPRefix } from "../plugins";
 import * as fs from "fs";
 
-var _database: { ownerNumber: string[], bot: string} = fs.existsSync("./lib/database/settings.json") ? JSON.parse(fs.readFileSync("./lib/database/settings.json").toString()) : {}
 
 export class HandlerMsg extends Validation {
 	public async handling (chats: WAChatUpdate): Promise <HandlingMessage | undefined> {
@@ -23,6 +22,7 @@ export class HandlerMsg extends Validation {
 			const botNumber: string = this.client.user.jid;
 			const bot: WAGroupParticipant | {} | undefined = isGroupMsg ? groupMetadata?.participants.find(v=> v.jid === this.client.user.jid) : {}
 			const user: WAGroupParticipant | {}| undefined  = isGroupMsg ? groupMetadata?.participants.find(v=> v.jid === this.client.user.jid) : {}
+			var _database: { ownerNumber: string[], bot: string} = fs.existsSync("./lib/database/settings.json") ? JSON.parse(fs.readFileSync("./lib/database/settings.json").toString()) : { ownerNumber: [], bot: ""}
 			_database.ownerNumber.push(botNumber)
 			const ownerNumber: string[] = _database.ownerNumber
 			const sendOwner: string = ownerNumber[0]
