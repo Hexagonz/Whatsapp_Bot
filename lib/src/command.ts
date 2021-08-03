@@ -27,7 +27,7 @@ let Reject: Set<string> = new Set()
 let Res: Set<string> = new Set()
 let AntiSpam: Set<string> = new Set()
 let Anti: Set<string> = new Set()
-var _database: { ownerNumber: string[], bot: string, antispam: number} = JSON.parse(fs.readFileSync("./lib/database/settings.json").toString())
+var _database: { ownerNumber: string[], bot: string, antispam: number} = fs.existsSync("./lib/database/settings.json") ? JSON.parse(fs.readFileSync("./lib/database/settings.json").toString()) : {}
 
 export class Command {
   public events: any = {}

@@ -5,7 +5,7 @@ import moment from "moment-timezone";
 import { getPRefix } from "../plugins";
 import * as fs from "fs";
 
-var _database: { ownerNumber: string[], bot: string} = JSON.parse(fs.readFileSync("./lib/database/settings.json").toString())
+var _database: { ownerNumber: string[], bot: string} = fs.existsSync("./lib/database/settings.json") ? JSON.parse(fs.readFileSync("./lib/database/settings.json").toString()) : {}
 
 export class HandlerMsg extends Validation {
 	public async handling (chats: WAChatUpdate): Promise <HandlingMessage | undefined> {
