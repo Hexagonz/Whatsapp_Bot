@@ -27,6 +27,7 @@ export class GroupData extends MusicHandling {
 	protected AddGroup () {
 		globalThis.CMD.on("admingc|add/masuk", ["add", "masuk"], async (res: WAConnection, data: Commands) => {
 			const { isBotAdmins, from, isGroupAdmins, isGroupMsg, mess, mentioned, groupMember, isOwner, ownerGroup } = data
+			if (!isOwner) return 
 			if (!isGroupMsg && !isGroupAdmins && !isGroupMsg && !isBotAdmins) return isGroupMsg ? !isBotAdmins ? isGroupAdmins ? this.Ra.reply(from, BotGaAdmin(), mess) : undefined : undefined : this.Ra.reply(from, BukanDalamGroup(), mess)
 			if (mentioned && mentioned[0] !== undefined) { 
 				if (groupMember !== null ? groupMember?.map((value) => value.jid).includes(mentioned[0]) : true) return this.Ra.reply(from, UserDalamGroup(), mess)
@@ -40,6 +41,7 @@ export class GroupData extends MusicHandling {
 	protected kickGroup () {
 		globalThis.CMD.on("admingc|kick/tendang/sepak", ["kick", "tendang", "sepak"], async (res: WAConnection, data: Commands) => {
 			const { isBotAdmins, from, isGroupAdmins, isGroupMsg, mess, mentioned, groupMember,  isOwner, ownerGroup, sender } = data
+			if (!isOwner) return 
 			if (!isGroupMsg) return  this.Ra.reply(from, BukanDalamGroup(), mess)
 			if (!isBotAdmins) return  this.Ra.reply(from, BotGaAdmin(), mess)
 			if (!isGroupAdmins) return 

@@ -7,7 +7,7 @@ import { CheckCommand } from "../functions/function"
 import * as fs from 'fs';
 
 
-
+var _database: { ownerNumber: string[], bot: string, antispam: number} = fs.existsSync("./lib/database/settings.json") ? JSON.parse(fs.readFileSync("./lib/database/settings.json").toString()) : {}
 
 interface Init {
   prefix?: RegExp;
@@ -81,7 +81,6 @@ export class Command {
                 let text: string = _args.join(' ')
                 let isCmd: boolean = this.getCmd(command, event.pattern)
                 if (!isCmd) continue
-				var _database: { ownerNumber: string[], bot: string, antispam: number} = fs.existsSync("./lib/database/settings.json") ? JSON.parse(fs.readFileSync("./lib/database/settings.json").toString()) : {}
 				if(Command == Prefix) return
 				if (typeof sender !== "string") return
 				if (typeof from !== "string") return

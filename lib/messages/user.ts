@@ -13,6 +13,7 @@ import { IndSuccesSetPrefix, IndSuccesSetMulti,  IndErrMulti, IndDonePushMulti, 
 const LajuCepat: number = Speed();
 const Ping: string = (Speed() - LajuCepat).toFixed(4)
 const Jam: string = moment(new Date()).format("LLLL")
+var _database: { ownerNumber: string[], bot: string} =  fs.existsSync("./lib/database/settings.json") ? JSON.parse(fs.readFileSync("./lib/database/settings.json").toString()) : {}
 
 export class UserHandler extends Convert {
 	constructor(public Ra: Client) {
@@ -78,7 +79,6 @@ export class UserHandler extends Convert {
 	private menu () {
 		globalThis.CMD.on("user|menu", ["menu"], (res: WAConnection,  data: Commands) => {
 			const { from, mess, isOwner, sender, command, Prefix } = data
-			var _database: { ownerNumber: string[], bot: string} =  fs.existsSync("./lib/database/settings.json") ? JSON.parse(fs.readFileSync("./lib/database/settings.json").toString()) : {}
 			const _typeMenu = Object.keys(globalThis.CMD.events)
 			let Converter: string[] = []
 			let User: string[] = []
