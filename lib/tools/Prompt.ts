@@ -3,8 +3,8 @@ import * as fs from "fs"
 import chalk from "chalk"
 import { Stating } from "../functions/log";
 
-export const Prompt = async () => {
-	if (fs.existsSync("./lib/database/settings.json")) {
+const Prompt =  () => {
+	if (!fs.existsSync("./lib/database/settings.json")) {
 		const Input = prompt({ sigint: false})
 		let owner: string | number | undefined  = Number(Input(chalk.yellow("Harap masukkan nomer owner bot (Nomer diawali dengan kode negara) : "))) || undefined
 		owner = owner ? Number(`${owner}`.replace(/\D/g,'')) : undefined
