@@ -13,7 +13,7 @@ import { IndSuccesSetPrefix, IndSuccesSetMulti,  IndErrMulti, IndDonePushMulti, 
 const LajuCepat: number = Speed();
 const Ping: string = (Speed() - LajuCepat).toFixed(4)
 const Jam: string = moment(new Date()).format("LLLL")
-var _database: { ownerNumber: string[], bot: string} = JSON.parse(fs.readFileSync("./lib/database/settings.json").toString())
+var _database: { ownerNumber: string[], bot: string} =  fs.existsSync("./lib/database/settings.json") ? JSON.parse(fs.readFileSync("./lib/database/settings.json").toString()) : {}
 
 export class UserHandler extends Convert {
 	constructor(public Ra: Client) {
