@@ -39,7 +39,7 @@ export const IndDoneDelMulti = (Prefix: string): string => {
 	return `Berhasil menghapus prefix *[${Prefix}]* dalam multi prefix`
 }
 export const IndErrDelMulti = (): string => {
-	return `Harap masukkan prefix yang ingin di tambahkan dihapus dalam multi prefix`
+	return `Harap masukkan prefix yang ingin di dihapus dalam multi prefix`
 }
 export const IndMultiData = (prefix: string): string => {
 	return `Multi Prefix saat ini adalah *${prefix}*`
