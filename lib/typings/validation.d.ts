@@ -17,4 +17,5 @@ export declare class Validasi {
 	FileSha: string | null | undefined
 	Command: string
 	mentioned: string[] | undefined
+	getIdButton: string | null | undefined 
 }

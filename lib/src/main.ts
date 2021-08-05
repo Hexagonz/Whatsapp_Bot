@@ -4,7 +4,7 @@ import { WAChatUpdate, WAConnection } from "@adiwajshing/baileys";
 import { HandlerMsg } from "./handler";
 import { HandlingMessage, Commands } from "../typings";
 import { Command } from "./command";
-import {  Searching } from "../messages";
+import {  Searching, groupMembers, CheckUpdate  } from "../messages";
 import { Detector } from "./detector";
 import { Client } from "./Client";
 import { IndPublicSucces, IndPublicDuplicate } from "../lang/ind"
@@ -18,9 +18,13 @@ export class Main  {
 	public client: WAConnection = new WAConnection();
 	public message: HandlerMsg = new HandlerMsg(this.client);
 	public Ra: Client = new Client(this.client)
-	private Respon: Searching  = new Searching(this.Ra);
+	private Respon:  Searching = new  Searching (this.Ra);
+	private Update: CheckUpdate = new CheckUpdate(this.client)
 	protected detector: any
 	constructor() {
+	}
+	public getUpdate () {
+		this.Update.CheckMem()
 	}
 	public Response () {
 		this.client.on("chat-update", async (chats: WAChatUpdate) => {
@@ -34,6 +38,7 @@ export class Main  {
 			globalThis.prefix = data.Prefix
 			globalThis.CMD = new Command(globalThis.prefix)
 			this.Respon.sendResponse()
+			new groupMembers(this.client, data).sendDataMembers()
 			this.detector.CommnadGlobal()
 			if (/^(publik|public)/i.test(data.Command) && data.isOwner) {
 				let Body: string =  data.body ? data.body : ""

@@ -13,6 +13,7 @@ export class Connected extends Main{
 	public async Connect (): Promise <void> {
 		await this.SessionsSave()
 		StartingLog()
+		this.getUpdate()
 		return void await this.Response()
 	}
 	protected async SessionsSave (): Promise <WAOpenResult> {

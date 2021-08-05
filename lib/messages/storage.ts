@@ -18,7 +18,7 @@ export class Storager extends  UserHandler {
 		this.checkMedia()
 	}
 	private async SaveMedia () {
-		globalThis.CMD.on("storage|save", "save", async (res: WAConnection, data: Commands) => {
+		globalThis.CMD.on("storage|save <id, media>", "save", async (res: WAConnection, data: Commands) => {
 			const { isQuotedAudio, isQuotedVideo, isQuotedSticker, isQuotedImage, isVideo, isAudio, isGambar, media, Filesize, sender, args, isOwner, from, mess, Prefix } = data
 			if (args[0] == undefined) return this.Ra.reply(from, IndMasukkanId(), mess)
 			if (media && isQuotedAudio || isQuotedVideo || isQuotedSticker || isQuotedImage || isVideo || isAudio || isGambar) {
@@ -45,7 +45,7 @@ export class Storager extends  UserHandler {
 		})
 	}
 	private async checkMedia () {
-		globalThis.CMD.on("storage|check", "check", (res: WAConnection, data: Commands) => {
+		globalThis.CMD.on("storage|check <id>", "check", (res: WAConnection, data: Commands) => {
 			const { from, sender, mess} = data
 			if (!sender) return 
 			fs.readdir("./lib/storage/public/", async (err, call) => {
@@ -55,7 +55,7 @@ export class Storager extends  UserHandler {
 		})
 	}
 	private async getMedia () {
-		globalThis.CMD.on("storage|get", "get", async (res: WAConnection, data:  Commands) => {
+		globalThis.CMD.on("storage|get <id>", "get", async (res: WAConnection, data:  Commands) => {
 			const { sender, args, from, mess } = data
 			if ( isUrl(args[0])) return
 			if (args[0] == undefined) return res.sendMessage(from, IndMasukkanId(), MessageType.text, { quoted: mess})

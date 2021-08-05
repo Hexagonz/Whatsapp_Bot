@@ -5,25 +5,25 @@ import { Tunggu, Buffer, RandomName, CheckSticker, AddSticker } from "../functio
 import { ToVideo } from "../routers/api";
 import * as fs from "fs";
 import { Client } from "../src/Client";
-import { IndTunggu,  IndBukanVid,  IndToVid, IndBukanAud, IndToCute, IndBukanSticker, IndGagalSticker, IndErrorMP3,  IndStickerReply, StickerDuplicate, StickerFound } from "../lang/ind";
+import { IndTunggu,  IndBukanVid,  IndToVid, IndBukanAud, IndToCute, IndBukanSticker, IndGagalSticker, IndErrorMP3,  IndStickerReply, StickerDuplicate, StickerFound, BukanStickerGif,  InputImage } from "../lang/ind";
 
 const Stick: Map<string, { sender: string, id: number, filesha: string, mess: proto.WebMessageInfo}[]> = new Map()
 export class Converter {
 	constructor(public Ra: Client) {}
-	public async SendingConverter () {
+	public async SendingConverter (): Promise <void> {
 		 this.toMP3()
 		 this.Sticker()
 		 this.ToVideo()
 		 this.toCUTE()
 		 this.toImg()
 	}
-	protected async Sticker () {
-		globalThis.CMD.on("converter|sticker", ["sticker", "s", "stiker", "stickergif", "stikergif", "sgif"], async (res: WAConnection, data: Commands) => {
+	protected async Sticker (): Promise <void> {
+		globalThis.CMD.on("converter|sticker <img,vid,sticker>", ["sticker", "s", "stiker", "stickergif", "stikergif", "sgif"], async (res: WAConnection, data: Commands) => {
 			const { args, media, from, mess, sendOwner, isQuotedDokumen, Command, FileSha, sender } = data;
 			if (!media ||  isQuotedDokumen) return await this.Ra.reply(from,  IndStickerReply(Command), mess)
 			if (CheckSticker(from, FileSha || "", Stick)) {
 				const Hasil: { sender: string, id: number, filesha: string, mess: proto.WebMessageInfo}[] | undefined = Stick.get(from)
-				if (!Hasil) return console.log(Hasil)
+				if (!Hasil) return 
 				const Respon: { sender: string, id: number, filesha: string, mess: proto.WebMessageInfo} | undefined = Hasil.find((value) => value.filesha === FileSha)
 				await this.Ra.sendTextWithMentions(from, StickerDuplicate(Respon?.sender || "", Respon?.id || 0), [Respon?.sender || ""], mess)
 				await this.Ra.sendTextWithMentions(from, StickerFound(sender || ""), [sender || ""], Respon?.mess)
@@ -95,11 +95,12 @@ export class Converter {
 		})
 	}
 	protected async ToVideo () {
-		globalThis.CMD.on("converter|tovid", "tovid", async (res: WAConnection, data: Commands) => {
+		globalThis.CMD.on("converter|tovid <stickergif>", "tovid", async (res: WAConnection, data: Commands) => {
 			const { isQuotedSticker, media, from, mess, sender } = data
 			if (!media && !isQuotedSticker)  return this.Ra.reply(from, IndBukanSticker(), mess)
-			await this.Ra.reply(from, IndTunggu(), mess)
 			if (!media) return
+			if (!media.message?.stickerMessage?.isAnimated) return this.Ra.reply(from, BukanStickerGif(), mess)
+			await this.Ra.reply(from, IndTunggu(), mess)
 			const input: string = await res.downloadAndSaveMediaMessage(media, "./lib/storage/temp/" + RandomName(23) + sender?.replace("@s.whatsapp.net", ""))
 			await ToVideo(input).then(async (value: { status: number, data: string } | any) => {
 				await this.Ra.sendVideo(from, await Buffer(value?.data), "", mess)
@@ -121,7 +122,7 @@ export class Converter {
 		}, { noPrefix: false})
 	}
 	protected async toMP3 () {
-		globalThis.CMD.on("converter|tomp3", "tomp3", async (res: WAConnection, data:  Commands) => {
+		globalThis.CMD.on("converter|tomp3 <video>", "tomp3", async (res: WAConnection, data:  Commands) => {
 			const { media, isQuotedVideo, from, mess, isVideo, sender, sendOwner } = data
 			if (!media && !isQuotedVideo || !media && isVideo) return this.Ra.reply(from, IndBukanVid(), mess)
 			if (!media) return
@@ -146,15 +147,16 @@ export class Converter {
 		}, { noPrefix: false })
 	}
 	protected async toImg () {
-		globalThis.CMD.on("converter|toimg", "toimg", async (res: WAConnection, data: Commands) => {
-			const { from, mess} = data
+		globalThis.CMD.on("converter|toimg <img>", "toimg", async (res: WAConnection, data: Commands) => {
+			const { from, mess, isQuotedImage, isGambar  } = data
+			if (!isGambar || !isQuotedImage) return this.Ra.reply(from, InputImage(), mess)
 			if (!data.media) return
-			const result =  await  Toimg(await res.downloadAndSaveMediaMessage(data.media,"./lib/storage/temp/" + RandomName(27)))
-			await this.Ra.sendImage(from, fs.readFileSync(result || ""), "", mess)
+			const result: string =  await  Toimg(await res.downloadAndSaveMediaMessage(data.media,"./lib/storage/temp/" + RandomName(27)))
+			return void await this.Ra.sendImage(from, fs.readFileSync(result || ""), "", mess)
 		}, { noPrefix: false})
 	}
 	protected async toCUTE () {
-		globalThis.CMD.on("converter|tocute", "tocute", async (res: WAConnection, data:  Commands) => {
+		globalThis.CMD.on("converter|tocute <audio>", "tocute", async (res: WAConnection, data:  Commands) => {
 			const { media, isQuotedAudio, from, mess, isAudio, sender } = data
 			if (!media && !isQuotedAudio || !media && isAudio) return this.Ra.reply(from, IndBukanAud(), mess)
 			if (!media) return

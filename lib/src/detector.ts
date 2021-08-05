@@ -23,6 +23,7 @@ export class Detector extends Verify {
 	public Handling () {
 		this.getRegister()
 		this.PrefixCheck()
+		this.ResponIdButton()
 		if (this.data.IsCMD) {
 			this.addHit()
 		}
@@ -35,6 +36,38 @@ export class Detector extends Verify {
 			this.client.modifyChat(from, "clear")
 		}
 	}
+	protected async ResponIdButton () {
+		const { getIdButton, from, mess } = this.data
+const Vcard : string =  'BEGIN:VCARD\n' 
++ 'VERSION:3.0\n' 
++ 'FN: I`am Ra\n' 
++ 'ORG: RA BOT\n' 
++ 'TEL;type=CELL;type=VOICE;waid=33753045534:+33 7 53 04 55 34\n' 
++ 'END:VCARD'
+		const Contact: any = {displayname: "I`am Ra", vcard: Vcard}
+		switch(getIdButton) {
+			case "gas owner":
+			await this.client.sendMessage(from || "", Contact, MessageType.contact, { quoted: mess})
+			break
+			case "keluarkan sc":
+			this.client.sendMessage(from || "", "*SCRIPT ORI* : https://github.com/rayyreall/Whatsapp_Bot", MessageType.extendedText, { quoted: mess})
+			break
+			case "s2k bot Ra":
+			this.client.sendMessage(from || "", `__________________________________
+*Notes :*
+*- Jangan Pernah Menelpon Bot Dan Owner Jika Menelpon Akan di block Otomatis dan TIdak ada Kata Unblock ‼️*
+*- Jika Menemukan Bug, Error, Saran Fitur Harap Segera Lapor Ke Owner*
+*- Bot Ini masih dalam Tahap pengembangan baru bikin:v*
+*- Prefix bisa di set sesuai keinginan sendiri*
+*- Bot Ini Dilengkapi Anti Spam, anda bisa menggunakan command berikutnya setelah prosess sebelumnya berakhir*
+			
+*Group : Coming soon*
+__________________________________
+*🔖 || IG*
+@rayyreall`, MessageType.extendedText, { quoted: mess})
+break
+		}
+	}
 	protected async PrefixCheck (){
 		const { from, Prefix, Command, mess, body, isOwner } = this.data
 		if (!from) return
@@ -42,6 +75,7 @@ export class Detector extends Verify {
 			this.client.sendMessage(from, IndPrefix(Prefix), MessageType.extendedText, { quoted: mess})
 		} else if (/^=>$/.test(Command) &&  isOwner) {
 			const data: HandlingMessage = this.data
+			const client = this.client
 			const Text = this.data?.body?.split(" ")
 			Text?.shift()
 			const convert: string = ts.transpile(`(async () => { ${Text?.join(" ")}})()`)

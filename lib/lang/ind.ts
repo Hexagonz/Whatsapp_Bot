@@ -254,3 +254,126 @@ export const SuccesSetName = (nama: string) => {
 export const SuccesSetDesk = () => {
 	return `Berhasil mengubah deskripsi group`
 }
+export const IndListOn = (result: { id: string, nama: string | undefined}[]): string => {
+	let Text: string = `*LIST ONLINE*\n\n`
+	let count: number = 1
+	for (let respon of result) {
+		Text += count + ". " + "@" + respon.id.replace("@s.whatsapp.net", "") + ` (${respon.nama})\n`
+		count++
+	}
+	return Text
+}
+export const IndGadaOn = () =>{
+	return `Maaf untuk saat ini tidak ada yang terlihat online`
+}
+export const IndVoteStart = (pelapor: string, target: string, alasan: string, time: number) => {
+	return `*VOTING*
+
+Pengajuan Voting : @${pelapor.replace('@s.whatsapp.net','')}
+Target Vote : @${target.replace('@s.whatsapp.net','')}
+Alasan : ${alasan}
+
+
+
+Ketik *vote* Jika setuju
+Ketik *devote* Jika tidak
+
+Voting berlangsung selama ${time} Menit
+`
+}
+export const IndVoting = (pelapor: string, target: string, alasan: string, data: any) => {
+	let Text = `
+*VOTING*
+	
+Pengajuan Voting : @${pelapor.replace('@s.whatsapp.net','')}
+Target Vote : @${target.replace('@s.whatsapp.net','')}
+Alasan : ${alasan}
+	
+	
+Ketik *vote* Jika setuju
+Ketik *devote* Jika tidak\n\n
+`
+let Vote: number = 1
+let Devote: number = 1
+let vote:  { id: string | null | undefined, status: string, pushname: string }[] = data.filter((value: { id: string | null | undefined, status: string, pushname: string }) => value.status == "vote")
+let devote:  { id: string | null | undefined, status: string, pushname: string }[] = data.filter((value: { id: string | null | undefined, status: string, pushname: string }) => value.status == "devote")
+Text += "  VOTE\n\n"
+for (let result of vote) {
+	Text += `${Vote}. ${result.pushname} *(${result.id?.replace("@s.whatsapp.net", "")})*\n`
+	Vote++
+}
+Text += "\n\n  DEVOTE\n\n"
+for (let result of devote) {
+	Text += `${Devote}. ${result.pushname} *(${result.id?.replace("@s.whatsapp.net", "")})*\n`
+	Devote++
+}
+return Text
+}
+export const IndHasilVote = (pelapor: string, target: string, alasan: string, data: any) => {
+	let Text: string = `
+*VOTING*
+	
+Pengajuan Voting : @${pelapor.replace('@s.whatsapp.net','')}
+Target Vote : @${target.replace('@s.whatsapp.net','')}
+Alasan : ${alasan}\n\n\n
+`
+let Vote: number = 1
+let Devote: number = 1
+let vote:  { id: string | null | undefined, status: string, pushname: string }[] = data.filter((value:  { id: string | null | undefined, status: string, pushname: string }) => value.status == "vote")
+let devote:  { id: string | null | undefined, status: string, pushname: string }[] = data.filter((value:  { id: string | null | undefined, status: string, pushname: string }) => value.status == "devote")
+Text += `VOTING BERAKHIR DENGAN HASIL :\n\n Vote : ${(vote.length)}\nDevote : ${(devote.length)}\n\n\n`
+Text += "  VOTE\n\n"
+for (let result of vote) {
+	Text += `${Vote}. ${result.pushname} *(${result.id?.replace("@s.whatsapp.net", "")})*\n`
+	Vote++
+}
+Text += "\n\n  DEVOTE\n\n"
+for (let result of devote) {
+	Text += `${Devote}. ${result.pushname}  *(${result.id?.replace("@s.whatsapp.net", "")})*\n`
+	Devote++
+}
+Text += "\n\n*VOTING DITUTUP*"
+return Text
+}
+export const IndTagall = (data: string[] | undefined) => {
+	let Text: string = "*TAGALL*\n\n"
+	let count: number = 1
+	for (let result of data || []) {
+		Text += count + ". " + "@" + result.replace("@s.whatsapp.net", "") + "\n"
+		count++
+	}
+	return Text
+}
+export const IndRevoked = (nama: string) => {
+	return `Berhasil mereset link group ${nama}`
+}
+export const IndSesiVotingAda = () => {
+	return `Maaf sesi voting sedang berlangsung di grup ini selesaikan sesi voting terlebih dahulu/ admin group bisa mereset sesi voting`
+}
+export const IndSesiVotingGada = () => {
+	return `Maaf sesi voting tidak ada dalam group ini harap aktifkan sesi voting terlebih dahulu`
+}
+export const IndResetSesi = () => {
+	return `Berhasil menghapus sesi voting dalam group ini`
+}
+export const IndVoteLebih15 = () => {
+	return `Maaf waktu voting tidak boleh lebih dari 15 menit`
+}
+export const BerhasilKickVote = (sender: string) => {
+	return `Berhasil mengeluarkan @${sender.replace("@s.whatsapp.net", "")} berdasarkan sesi voting`
+}
+export const CancelVote = () => {
+	return `Berhasil membatalkan vote dikarenakan lebih dari 15 orang memilih devote`
+}
+export const DiaKeluarVote = () => {
+	return `Yah Out, voting ditutup`
+}
+export const BukanStickerGif = () => {
+	return `Maaf ka itu bukan sticker gif harap gunakan sticker gif`
+}
+export const InputImage = () => {
+	return `Maaf ka harap kirim / reply gambar dengan caption`
+}
+export const IndBukanSgif = () => {
+	return `Maaf ka sticker gif tidak bisa dijadiin profil`
+}

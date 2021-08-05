@@ -6,7 +6,6 @@ class Start extends Connected {
 	}
 	protected async Conect () {
 		await this.Connect()
-		console.log("succes")
 	}
 }
 new Start().Connect()

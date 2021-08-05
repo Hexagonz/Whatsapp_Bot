@@ -15,6 +15,7 @@ export interface  HandlingMessage {
 	media: WAMessage | null;
 	sender: string | null | undefined
 	mess: proto.WebMessageInfo | undefined
+	getIdButton: string | null | undefined 
 	FileSha: string | null  | undefined
 	mentioned: string[]  | undefined
 	groupMetadata: WAGroupMetadata | null
@@ -40,6 +41,7 @@ export interface  HandlingMessage {
 	isVideo: boolean;
 	isAudio: boolean;
 	isQuotedSticker: boolean;
+	isSticker: boolean;
 	isQuotedImage: boolean;
 	isQuotedVideo: boolean;
 	isQuotedAudio: boolean;
@@ -71,6 +73,7 @@ export declare class Commands {
 	groupMember: WAGroupParticipant[] | null | undefined
 	Command: string
 	mess: proto.WebMessageInfo | undefined;
+	getIdButton: string | null | undefined 
 	bot: isBOT;
 	user: isUser;
 	groupMetadata: WAGroupMetadata | null
@@ -86,6 +89,7 @@ export declare class Commands {
 	Jam: string;
 	Prefix: string;
 	IsCMD: boolean 
+	isSticker: boolean;
 	isMedia: boolean;
 	isGambar: boolean;
 	isVideo: boolean;

@@ -1,5 +1,5 @@
 import {Converter as Convert} from ".";
-import { WAConnection, MessageType } from "@adiwajshing/baileys";
+import { WAConnection, MessageType, proto } from "@adiwajshing/baileys";
 import { Commands } from "../typings";
 import { Ucapan, setPrefix, statusPrefix, multiPrefix, addPrefixMulti, delPrefixMulti, getMulti,  getHit } from "../plugins";
 import Speed from "performance-now";
@@ -19,7 +19,7 @@ export class UserHandler extends Convert {
 	constructor(public Ra: Client) {
 		super(Ra)
 	}
-	public async sendData () {
+	public async sendData (): Promise <void> {
 		this.SendingConverter()
 		this.menu()
 		this.setPrefix()
@@ -27,65 +27,74 @@ export class UserHandler extends Convert {
 		this.addPrefix()
 		this.delPrefix()
 		this.checkMulti()
+		this.Creator()
 	}
-	private setPrefix () {
-		globalThis.CMD.on("user|setprefix", ["setprefix"], (res: WAConnection, data: Commands) => {
+	private setPrefix (): void {
+		globalThis.CMD.on("user|setprefix <prefix>", ["setprefix"], (res: WAConnection, data: Commands) => {
 			const { from, mess, sender, args } = data
 			if (!sender) return
 			const hasil = setPrefix(args[0], sender)
-			this.Ra.reply (from, IndSuccesSetPrefix(hasil || "", statusPrefix(sender)),mess)
+			return void this.Ra.reply (from, IndSuccesSetPrefix(hasil || "", statusPrefix(sender)),mess)
 		}, { noPrefix: false })
 	}
-	private checkMulti () {
+	private checkMulti (): void {
 		globalThis.CMD.on("user|cekmulti", "cekmulti", (res: WAConnection, data: Commands) => {
-			const { from, mess, sender, args } = data
+			const { from, mess, sender } = data
 			if (!sender) return
 			const hasil: string | undefined = getMulti(sender)
 			if (typeof hasil !== "string") return
-			this.Ra.reply(from, IndMultiData(hasil), mess)
+			return void this.Ra.reply(from, IndMultiData(hasil), mess)
 		})
 	}
-	private addPrefix () {
-		globalThis.CMD.on("user|addmulti", ["addmulti"], (res: WAConnection, data: Commands) => {
+	private addPrefix (): void {
+		globalThis.CMD.on("user|addmulti <prefix>", ["addmulti"], (res: WAConnection, data: Commands) => {
 			const { from, mess, sender, args } = data
 			if (args[0] == undefined) return this.Ra.reply(from, IndErrPushMulti(), mess)
 			if (!sender) return
 			addPrefixMulti(sender, args[0])
-			this.Ra.reply(from, IndDonePushMulti(args[0]), mess)
+			return void this.Ra.reply(from, IndDonePushMulti(args[0]), mess)
 		}, { noPrefix: false})
 	}
-	private delPrefix () {
-		globalThis.CMD.on("user|delmulti", ["delmulti"], (res: WAConnection, data: Commands) => {
+	private Creator (): void {
+		globalThis.CMD.on("user|creator/owner", ["owner", "creator"], (res: WAConnection, data: Commands) => {
+			const { from, mess } = data
+			return void this.Ra.sendContactOwner (from, mess)
+		})
+	}
+	private delPrefix (): void | undefined {
+		globalThis.CMD.on("user|delmulti <prefix>", ["delmulti"], (res: WAConnection, data: Commands) => {
 			const { from, mess, sender, args } = data
 			if (!sender) return
 			if (args[0] == undefined) return this.Ra.reply(from, IndErrDelMulti(), mess)
 			delPrefixMulti(sender, args[0])
-			this.Ra.reply(from, IndDoneDelMulti(args[0]), mess)
+			return void this.Ra.reply(from, IndDoneDelMulti(args[0]), mess)
 		}, { noPrefix: false})
 	}
-	private multiPrefix () {
-		globalThis.CMD.on("user|multi", ["multi"],  (res: WAConnection, data: Commands) => {
+	private multiPrefix (): void {
+		globalThis.CMD.on("user|multi <on/off>", ["multi"],  (res: WAConnection, data: Commands) => {
 			const { from, mess, sender, args } = data
 			if (!sender) return
 			if (args[0] == "on") {
 				multiPrefix(true, sender)
-				this.Ra.reply(from, IndSuccesSetMulti(true), mess)
+				return void this.Ra.reply(from, IndSuccesSetMulti(true), mess)
 			} else if (args[0] == "off") {
 				multiPrefix(false, sender)
-				this.Ra.reply(from, IndSuccesSetMulti(false), mess)
+				return void this.Ra.reply(from, IndSuccesSetMulti(false), mess)
 			}
 		},  { noPrefix: false })
 	}
-	private menu () {
-		globalThis.CMD.on("user|menu", ["menu"], (res: WAConnection,  data: Commands) => {
-			const { from, mess, isOwner, sender, command, Prefix } = data
-			const _typeMenu = Object.keys(globalThis.CMD.events)
+	private menu (): void {
+		globalThis.CMD.on("user|menu", ["menu"], async (res: WAConnection,  data: Commands) => {
+			const { from, isOwner, sender, command, Prefix } = data
+			const _typeMenu: string[] = Object.keys(globalThis.CMD.events)
 			let Converter: string[] = []
 			let User: string[] = []
 			let Owner: string[] = ["=>", "$cat", "publik/public <on/off>"]
 			let Storage: string[] = []
 			let Stalker: string[] = []
 			let Group: string[] = []
+			let GroupMem: string[] = []
+			let Voting: string[] = []
 			_typeMenu.map((value: string) => {
 				if (value.startsWith("converter")) {
 					Converter.push(value.split("|")[1])
@@ -99,6 +108,8 @@ export class UserHandler extends Convert {
 					Stalker.push(value.split("|")[1])
 				} else if (value.startsWith("admingc")) {
 					Group.push(value.split("|")[1])
+				} else if (value.startsWith("voting")) {
+					Voting.push(value.split("|")[1])
 				}
 			})
 			let informasi: string = `
@@ -109,13 +120,12 @@ export class UserHandler extends Convert {
 *⏰ Jam* : ${Jam}
 *⏳ Runtime* : ${Runtime(process.uptime())}
 *🍃 Speed* : ${Ping}
-*🪀 Owner* : @33753045534 ( *Ra* )
+*🪀 Creator* : @33753045534 ( *Ra* )
 *🌄 Lib* : Baileys
 *♦️ Hit User* : ${getHit(sender || "")}
 *📜 Language :* Typescript
 *⚔️ Prefix :* ${Prefix}
-*🔑 Apikey* : 𝐍𝐨𝐭 𝐅𝐨𝐮𝐧𝐝
-*🛎 Script :* https://github.com/rayyreall/Whatsapp_Bot \n\n`
+*🔑 Apikey* : 𝐍𝐨𝐭 𝐅𝐨𝐮𝐧𝐝\n\n`
 
 informasi += "\n         *MENU OWNER*\n\n"
 for (let result of Owner.sort()) {
@@ -141,6 +151,10 @@ informasi += "\n         *MENU ADMIN GROUP*\n\n";
 for (let result of Group.sort()) {
 	informasi += `*ℒ⃝🕊️ •* *` + Prefix  + result + "*\n"
 }
+informasi += "\n         *VOTING*\n\n"
+for (let result of Voting.sort()) {
+	informasi += `*ℒ⃝🕊️ •* *` + Prefix  + result + "*\n"
+}
 informasi += `\n\n__________________________________
 *Notes :*
 *- Jangan Pernah Menelpon Bot Dan Owner Jika Menelpon Akan di block Otomatis dan TIdak ada Kata Unblock ‼️*
@@ -153,8 +167,25 @@ informasi += `\n\n__________________________________
 __________________________________
 *🔖 || IG*
 @rayyreall`
-
-this.Ra.sendTextWithMentions(from, informasi, ["33753045534@s.whatsapp.net"], mess)
+				const Thumb: any = fs.readFileSync ("./lib/storage/polosan/thumb.png")
+				const Buttons: any = {
+					contentText: informasi,
+					footerText: "🔖 @Powered bye Ra",
+					buttons: [
+						{buttonId: "gas owner", buttonText: {displayText: '𝗢𝗪𝗡𝗘𝗥 / 𝗖𝗥𝗘𝗔𝗧𝗢𝗥'}, type: 1},
+						{buttonId: 'keluarkan sc', buttonText: {displayText: "𝗦𝗖𝗥𝗜𝗣𝗧 𝗕𝗢𝗧"}, type: 1},
+						{buttonId: 's2k bot Ra', buttonText: {displayText: '𝗦𝗬𝗔𝗥𝗔𝗧 & 𝗞𝗘𝗧𝗘𝗡𝗧𝗨𝗔𝗡'}, type: 1}
+					],
+					headerType: 4,
+					imageMessage: await (await res.prepareMessageMedia(fs.readFileSync ("./lib/storage/polosan/thumb.png"), MessageType.image, { thumbnail: Thumb})).imageMessage
+				}
+				let response: proto.WebMessageInfo | any= await res.prepareMessage(from, Buttons, MessageType.buttonsMessage, { thumbnail: Thumb, contextInfo: { mentionedJid: ["33753045534@s.whatsapp.net"]}})
+				if (response.message?.ephemeralMessage) {
+					response.message.ephemeralMessage.message.buttonsMessage.imageMessage.jpegThumbnail = Thumb
+				}  else {
+					response.message.buttonsMessage.imageMessage.jpegThumbnail = Thumb
+				}
+				return void await res.relayWAMessage(response)
 		})
 	}
 }

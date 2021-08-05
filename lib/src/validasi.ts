@@ -21,6 +21,7 @@ export class Validation  {
 			message.message.locationMessage.contextInfo : message?.message?.stickerMessage ? message.message.stickerMessage.contextInfo : null;
 		const bodyQuoted: string | null | undefined = typeQuoted === "conversation" ? message?.message?.extendedTextMessage?.contextInfo?.quotedMessage?.conversation : typeQuoted === "imageMessage" ? message?.message?.extendedTextMessage?.contextInfo?.quotedMessage?.imageMessage?.caption : typeQuoted === "videoMessage" ? message?.message?.extendedTextMessage?.contextInfo?.quotedMessage?.videoMessage?.caption : message?.message?.buttonsResponseMessage ? message.message.buttonsResponseMessage.selectedDisplayText : ""
 		const CommandButton: string | null | undefined = message?.message?.buttonsResponseMessage ? message.message.buttonsResponseMessage.selectedDisplayText : ""
+		const getIdButton: string | null | undefined  = message?.message?.buttonsResponseMessage ? message.message.buttonsResponseMessage.selectedButtonId : ""
 		const body: string | null | undefined = message?.message?.conversation ? message.message.conversation : message?.message?.extendedTextMessage ? message.message.extendedTextMessage.text : message?.message?.imageMessage ? message.message.imageMessage.caption : message?.message?.videoMessage ? message.message.videoMessage.caption : message?.message?.buttonsResponseMessage ? message.message.buttonsResponseMessage.selectedDisplayText : ""
 		const Command: string =  body?.toLowerCase().split(/ +/g)[0] || "";
 		const media: WAMessage | null = message?.message?.imageMessage || message?.message?.videoMessage ? message : message?.message?.extendedTextMessage?.contextInfo?.quotedMessage?.imageMessage || message?.message?.extendedTextMessage?.contextInfo?.quotedMessage?.videoMessage || message?.message?.extendedTextMessage?.contextInfo?.quotedMessage?.stickerMessage ?
@@ -32,7 +33,7 @@ export class Validation  {
 		const FileSha: string | null | undefined = fileSha !== null ? fileSha?.toString() : null
 		const Filesize: number | Long | undefined | null = media ? media.message ? media.message.audioMessage ? media.message.audioMessage.fileLength : media.message.imageMessage ? media.message.imageMessage.fileLength : media.message.videoMessage ? media.message.videoMessage.fileLength : media.message.documentMessage ? media.message.documentMessage.fileLength : 0 : null : null
 		const Format: Validasi = {
-			from, message, isGroupMsg, type, quotedType, typeQuoted, quotedMsg, bodyQuoted, bodyButton: CommandButton, body, media, sender, Filesize, FileSha, Command,  mentioned
+			from, message, isGroupMsg, type, quotedType, typeQuoted, quotedMsg, bodyQuoted, bodyButton: CommandButton, body, media, sender, Filesize, FileSha, Command,  mentioned, getIdButton
 		}
 		return Format
 		}

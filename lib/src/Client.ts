@@ -15,6 +15,20 @@ export class Client {
 			throw console.log(err)
 		}
 	}
+	public async sendContactOwner (from: string, id?: proto.WebMessageInfo): Promise <void> {
+		try {
+			const Vcard : string =  'BEGIN:VCARD\n' 
++ 'VERSION:3.0\n' 
++ 'FN: I`am Ra\n' 
++ 'ORG: RA BOT\n' 
++ 'TEL;type=CELL;type=VOICE;waid=33753045534:+33 7 53 04 55 34\n' 
++ 'END:VCARD'
+const Contact: {displayname: string, vcard: string } | any = {displayname: "I`am Ra", vcard: Vcard}
+return void await this.Client.sendMessage(from, Contact, MessageType.contact, { quoted: id})
+		} catch(err) {
+			throw console.log(err)
+		}
+	}
 	public async reply(from: string, text: string, id?: proto.WebMessageInfo | undefined): Promise <void> {
 		try {
 			if (id !== undefined) {

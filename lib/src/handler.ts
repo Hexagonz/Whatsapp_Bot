@@ -26,7 +26,7 @@ export class HandlerMsg extends Validation {
 			const user: WAGroupParticipant | {}| undefined  = isGroupMsg ? groupMetadata?.participants.find(v=> v.jid === this.client.user.jid) : {}
 			_database.ownerNumber.push(botNumber)
 			const ownerNumber: string[] = _database.ownerNumber
-			const sendOwner: string = ownerNumber[0]
+			const sendOwner: string = ownerNumber[0];
 			const isOwner: boolean = ownerNumber.includes(sender || "");
 			const groupMember: WAGroupParticipant[] | null | undefined = isGroupMsg ? groupMetadata?.participants : null
 			const groupAdmins: string[]  =  isGroupMsg ?  groupMember !== null ? groupMember?.filter((value) => value.isAdmin == true) ? groupMember.filter((value) => value.isAdmin == true).map((value) => value.jid) : [] : [] : [];
@@ -37,6 +37,7 @@ export class HandlerMsg extends Validation {
 			const isGambar: boolean = (type === "imageMessage");
 			const isVideo: boolean = (type === "videoMessage");
 			const isAudio: boolean = (type === "audioMessage");
+			const isSticker: boolean = (type === "stickerMessage");
 			const Jam: string = moment(new Date()).format("LLLL");
 			const command: string =  body?.toLowerCase().split(/ +/g)[0] || "";
 			const Prefix: string = getPRefix(sender || "", command);
@@ -70,6 +71,7 @@ export class HandlerMsg extends Validation {
 				isGambar,
 				isVideo,
 				isAudio,
+				isSticker,
 				isQuotedSticker,
 				isQuotedImage,
 				isQuotedVideo,
@@ -78,6 +80,7 @@ export class HandlerMsg extends Validation {
 			}
 			return Format
 		} catch (err: unknown | any) {
+			if (`${err}`.match(/this.isZero/gi)) return
 			console.log(err)
 		}
 	}

@@ -118,6 +118,7 @@ export async function CreateSticker (input: string, wm?: string): Promise <strin
 						reject(error)
 					} else {
 						if (fs.existsSync(exifPath + ".exif") && typeof wm == "string") fs.unlinkSync(exifPath + ".exif");
+						if (fs.existsSync(input)) fs.unlinkSync(input)
 						if (fs.existsSync(output)) resolve(output)
 					}
 				})

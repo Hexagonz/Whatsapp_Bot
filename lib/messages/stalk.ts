@@ -18,7 +18,7 @@ export class Stalking extends Storager {
 		this.TiktokStalk()
 	}
 	private async TiktokStalk () {
-		globalThis.CMD.on("stalk|stalktiktok", ["stalktiktok"], async (res: WAConnection, data: Commands) => {
+		globalThis.CMD.on("stalk|tiktokstalk <username>", ["stalktiktok", "tiktokstalk"], async (res: WAConnection, data: Commands) => {
 			const { from, mess, args, sendOwner } = data
 			if (args[0] == undefined) return  await this.Ra.reply(from, IndUsernameNoKosong(), mess)
 			if (isUrl (args[0])) return await this.Ra.reply(from,  IndMasukkanUsernameNoUrl("Tiktok"), mess)
@@ -32,7 +32,7 @@ export class Stalking extends Storager {
 		})
 	}
 	private async YoutubeStalk () {
-		globalThis.CMD.on("stalk|ytstalk", ["ytstalk"], async (res: WAConnection, data: Commands) => {
+		globalThis.CMD.on("stalk|ytstalk <username>", ["ytstalk"], async (res: WAConnection, data: Commands) => {
 			const { from, mess, args, sendOwner } = data
 			if (args[0] == undefined) return  await this.Ra.reply(from, IndUsernameNoKosong(), mess)
 			try {
@@ -46,7 +46,7 @@ export class Stalking extends Storager {
 		})
 	}
 	private async insta () {
-		globalThis.CMD.on("stalk|igstalk", ["igstalk"], async (res: WAConnection, data: Commands) => {
+		globalThis.CMD.on("stalk|igstalk <username>", ["igstalk"], async (res: WAConnection, data: Commands) => {
 			const { from, mess, args, pushname } = data
 			if (args[0] == undefined) return  await this.Ra.reply(from, IndUsernameNoKosong(), mess)
 			await InstaStalk(args[0]).then(async (respon: instaStalk) => {

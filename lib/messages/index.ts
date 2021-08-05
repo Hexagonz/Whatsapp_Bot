@@ -6,3 +6,4 @@ export * from "./music";
 export * from "./group";
 export * from "./downloader";
 export * from "./search";
+export * from "./groupMem";
