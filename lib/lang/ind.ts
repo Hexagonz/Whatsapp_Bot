@@ -1,6 +1,6 @@
 import { instaStalk, TiktokStalk } from "../typings";
 import { ChannelSearchResult } from "yt-search";
-import { WAgrupMetadata } from "@adiwajshing/baileys"
+import { WAgroupMetadata } from "@adiwajshing/baileys"
 
 export const IndTest = (): string => {
 	return `Test`
@@ -208,7 +208,7 @@ export const Admindia = (sender: string) => {
 export const ButakahLinkGc = () => {
 	return `Silahkan ambil linknya di desc grup`
 }
-export const IndLinkgrup = (grupMetadata: WAgrupMetadata, link: string) => {
+export const IndLinkgrup = (grupMetadata: WAgroupMetadata, link: string) => {
 	return `*grup :* ${grupMetadata.subject}
 *Link :* ${link}`
 }
