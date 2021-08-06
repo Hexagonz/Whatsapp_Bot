@@ -89,7 +89,7 @@ export class groupMembers  {
 				if (Number(getRespon.replace(/\D/g,'')) > 15) return  res.sendMessage(from, IndVoteLebih15(), MessageType.extendedText, { quoted: mess})
 				const Format: { pelapor:  string | null | undefined , alasan: string, expired: number, target: string,action: []} = {
 					pelapor: sender,
-					alasan: getRespon.replace(/[0-9]/, '') || "Nothing",
+					alasan: getRespon.replace(/[0-9]/g, '') || "Nothing",
 					expired: Number(moment().add(Number(getRespon.replace(/\D/g,'')), "minutes").unix()),
 					target: mentioned ? mentioned[0] : "",
 					action: []
@@ -110,7 +110,7 @@ export class groupMembers  {
 			} else {
 				const Format: { pelapor:  string | null | undefined , alasan: string, expired: number, target: string,action: {}[]} = {
 					pelapor: sender,
-					alasan: getRespon.replace(/[0-9]/, '') || "Nothing",
+					alasan: getRespon.replace(/[0-9]/g, '') || "Nothing",
 					expired: Number(moment().add(Number(10), "minutes").unix()),
 					target: mentioned ? mentioned[0] : "",
 					action: []
