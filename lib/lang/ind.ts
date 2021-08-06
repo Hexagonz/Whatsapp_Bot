@@ -14,32 +14,29 @@ export const IndBukanVid = (): string => {
 export const IndBukanAud = (): string => {
 	return `Maaf file yang anda kirim bukan berformat audio`
 }
-export const IndToVid = (): string => {
-	return `Maaf terjadi kesalahan pada fitur media tovideo harap coba lagi`
-}
-export const IndToCute = (): string => {
-	return `Maaf terjadi kesalahan pada fitur media tocute harap coba lagi`
+export const IndKesalahan = (): string => {
+	return `Maaf terjadi kesalahan pada fitur ini, harap coba beberapa saat lagi`
 }
 export const IndSuccesSetPrefix = (prefix: string, status: boolean): string => {
-	return `Sukses mengubah prefix menjadi ${prefix}.\n\n_*Status Prefix saat ini :* ${status ? "multi" : prefix}_`
+	return `Sukses mengubah prefix menjadi *${prefix}*\n\n_*Status Prefix saat ini :* ${status ? "multi" : prefix}_`
 }
 export const IndSuccesSetMulti = (status: boolean): string => {
 	return `Sukses  ${status ? "Mengaktifkan mode multi prefix" : "Menonaktifkan mode multi prefix"}`
 }
 export const IndErrMulti = (status: boolean): string => {
-	return `${status ? "Anda sudah berada dalam mode multi prefix" : "Anda sudah berada dalam mode non multi prefix check prefix anda, ketik prefix"}`
+	return `${status ? 'Anda sudah berada dalam mode multi prefix' : 'Anda sudah berada dalam mode non multi prefix check prefix anda, ketik "prefix"'}`
 }
 export const IndDonePushMulti = (Prefix: string): string => {
-	return `Sukses menambakan prefix *[${Prefix}]* kedalam multi prefix`
+	return `Sukses menambakan prefix *${Prefix}* kedalam multi prefix`
 }
 export const IndErrPushMulti = () => {
 	return `Harap masukkan prefix yang ingin di tambahkan kedalam multi prefix`
 }
 export const IndDoneDelMulti = (Prefix: string): string => {
-	return `Berhasil menghapus prefix *[${Prefix}]* dalam multi prefix`
+	return `Berhasil menghapus prefix *${Prefix}* dari multi prefix`
 }
 export const IndErrDelMulti = (): string => {
-	return `Harap masukkan prefix yang ingin di dihapus dalam multi prefix`
+	return `Harap masukkan prefix yang ingin dihapus di dalam multi prefix`
 }
 export const IndMultiData = (prefix: string): string => {
 	return `Multi Prefix saat ini adalah *${prefix}*`
@@ -51,7 +48,7 @@ export const IndGagalSticker = (): string => {
 	return `Terjadi keselahan dalam menbuat sticker harap coba lagi`
 }
 export const IndFileGede = (sender: string): string => {
-	return `Maaf ka @${sender.replace(/@s.whatsapp.net/i, "")} Size media yang anda kirim terlalu besar untuk bot`
+	return `Maaf ka @${sender.replace(/@s.whatsapp.net/i, "")}, Size media yang anda kirim terlalu besar untuk bot`
 }
 export const LimitStorage = (): string => {
 	return `Maaf, Limit storage anda telah habis. Agar anda bisa menggunakan kembali harap hapus salah satu media anda untuk menambah limit storage`
@@ -60,44 +57,38 @@ export const IndIdDuplicate = (): string => {
 	return `Maaf, Id yang anda masukkan sudah ada di penyimpanan bot harap ganti dengan id lain`
 }
 export const IndSuccesSave = (Id: string, Prefix: string, isOwner: boolean, limit: number): string => {
-	return `
-*ID :* ${Id}
-*STATUS :* Berhasil menyimpan media ketik ${Prefix}get ${Id} untuk mengambil file anda
-*NOTES*
+	return `*ID File :* ${Id}
+*STATUS :* Berhasil menyimpan media ketik "${Prefix}get ${Id}" untuk mengambil file anda
+
+*-ˋˏ NOTES ˎˊ-*
 Sisa Limit File anda tersisa  ${isOwner ? "Unlimited" : Number(4 - limit)}, jika habis anda tidak dapat menyimpan kembali`
 }
 export const IndMasukkanId = (): string => {
 	return `Harap masukkan id`
 }
 export const IndIdStorageKosong = (): string => {
-	return `Maaf id storage yang ingin anda cari kosong`
+	return `Maaf id storage yang anda cari tidak ada`
 }
 export const IndCheckStorage = (data: string[], sender: string): string => {
 	let jumlah = 1
-	let text = `*STORAGE*\n\n`
+	let text = `*-ˋˏ STORAGE ˎˊ-*\n`
 	for (let result of data) {
 		text += `${jumlah}. ${result.split(".")[0].replace(sender, "")}\n`
 		jumlah++
 	}
 	return text
 }
-export const IndErrorMP3 = (): string => {
-	return `Maaf, Terjadi kesalahan pada fitur media mp3 silahkan coba kembali`
-}
 export const IgStalk = (data: instaStalk): string => {
-	return `
-	*INSTAGRAM STALK*
-	
-*🎁 Id :* ${data.id}
-*🌐 Username :* ${data.username}
-*🌹 Nickname :* ${data.nickname}
-*⚔️ Kategori :* ${data.category}
-*🎀 Bio :* ${data.bio}
-*🔖Akun bisnis :* ${data.akun_bisnis ? "Iya" : "Tidak"}
-*🔐 Private Akun :* ${data.private ? "Iya" : "Tidak"}
-*🚨 Akun Terverifikasi :* ${data.centang ? "Iya" : "Tidak"}
-*📦 Total Post:* ${data.total_post}
-`
+	return `*-ˋˏ IG Stalk ˎˊ-*
+*Id :* ${data.id}
+*Username :* ${data.username}
+*Nickname :* ${data.nickname}
+*Kategori :* ${data.category}
+*Bio :* ${data.bio}
+*Akun bisnis :* ${data.akun_bisnis ? "Iya" : "Tidak"}
+*Private Akun :* ${data.private ? "Iya" : "Tidak"}
+* Akun Terverifikasi :* ${data.centang ? "Iya" : "Tidak"}
+*Total Post:* ${data.total_post}`
 }
 export const IndUserKosong = (pushname: string): string => {
 	return `Maaf ka ${pushname} Username instagram yang anda cari kosong / akun pemilik di private`
@@ -106,12 +97,11 @@ export const IndUsernameNoKosong = () => {
 	return `Maaf ka Harap masukkan username instagram yang ingin anda stalk`
 }
 export const IndYtStalk = (data: ChannelSearchResult): string => {
-	return `
+	return `*-ˋˏ IG Stalk ˎˊ-*
 Nama : ${data.name}
 Url : ${data.url}
 Total Video : ${data.videoCount}
-Total Subcriber : ${data.subCountLabel}
-`
+Total Subcriber : ${data.subCountLabel}`
 }
 export const IndYtStalkError = (): string => {
 	return `Fitur Yt stalk sedang error harap coba lagi nanti`
