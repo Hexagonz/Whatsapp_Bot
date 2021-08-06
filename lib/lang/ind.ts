@@ -1,6 +1,6 @@
 import { instaStalk, TiktokStalk } from "../typings";
 import { ChannelSearchResult } from "yt-search";
-import { WAGroupMetadata } from "@adiwajshing/baileys"
+import { WAgrupMetadata } from "@adiwajshing/baileys"
 
 export const IndTest = (): string => {
 	return `Test`
@@ -97,17 +97,14 @@ export const IndUsernameNoKosong = () => {
 	return `Maaf ka Harap masukkan username instagram yang ingin anda stalk`
 }
 export const IndYtStalk = (data: ChannelSearchResult): string => {
-	return `*-ˋˏ IG Stalk ˎˊ-*
-Nama : ${data.name}
-Url : ${data.url}
-Total Video : ${data.videoCount}
-Total Subcriber : ${data.subCountLabel}`
-}
-export const IndYtStalkError = (): string => {
-	return `Fitur Yt stalk sedang error harap coba lagi nanti`
+	return `*-ˋˏ YT Stalk ˎˊ-*
+*Nama :* ${data.name}
+*Url :* ${data.url}
+*Total Video :* ${data.videoCount}
+*Total Subcriber :* ${data.subCountLabel}`
 }
 export const IndStalkUsernameNull = (fitur: string): string => {
-	return `Username ${fitur} yang anda cari sedang kosong`
+	return `Username yang anda cari di ${fitur} tidak ada`
 }
 export const IndTiktokStalk = (data: TiktokStalk): string => {
 	const Tanggal_Upload = new Date(Number(data.createTime) * 1000).toLocaleString("id", {
@@ -118,20 +115,19 @@ export const IndTiktokStalk = (data: TiktokStalk): string => {
 	minute: 'numeric',
 	day: "numeric"
 	})
-	return `
-ID : ${data.id}
-Unique Id : ${data.uniqueId}
-Nickname : ${data.nickname}
-Signature : ${data.signature}
-Tanggal Buat : ${Tanggal_Upload}
-Verived : ${data.verified ? "Yes" : "No"}
-Private : ${data.privateAccount ? "Yes" : "No"}
-Bio Link : ${data.bioLink ? data.bioLink.link : ""}
-Room Id : ${data.roomId}
-`
+	return `*-ˋˏ TikTok Stalk ˎˊ-*
+*ID :* ${data.id}
+*Unique Id :* ${data.uniqueId}
+*Nickname :* ${data.nickname}
+*Signature :* ${data.signature}
+*Tanggal Buat :* ${Tanggal_Upload}
+*Verified :* ${data.verified ? "Yes" : "No"}
+*Private :* ${data.privateAccount ? "Yes" : "No"}
+*Bio Link :* ${data.bioLink ? data.bioLink.link : ""}
+*Room Id :* ${data.roomId}`
 }
 export const IndMasukkanUsernameNoUrl = (fitur: string): string => {
-	return `Maaf ka harap masukkan username ${fitur} bukan Link`
+	return `Maaf ka harap masukkan username yang ingin anda cari di ${fitur}, bukan Link`
 }
 export const Indverifikasi = (status: number, otp: string): string => {
 	if (status === 1) {
@@ -141,25 +137,25 @@ export const Indverifikasi = (status: number, otp: string): string => {
 	} else if (status === 3) {
 		return `Kode verifikasi anda adalah ${otp}, anda baru bisa meminta kode lagi dalam 8 jam`
 	} else if (status === 4) {
-		return `Berhasil anda telah selesai melakukan verifikasi`
+		return `Berhasil!, Anda telah selesai melakukan verifikasi`
 	} else {
 		return ""
 	}
 }
 export const IndPublicSucces = (status: boolean): string => {
-	return `Berhasil mengubah status Bot ${status ? "ke publik" : "ke Self"}`
+	return `Berhasil mengubah status Bot menjadi : *${status ? "Publik" : "Self"}*`
 }
 export const IndPublicDuplicate = (status: boolean): string => {
-	return `Status Bot untuk saat ini sudah ${status ? "PUBLIK" : "SELF"}`
+	return `Status Bot untuk saat ini sudah *${status ? "Publik" : "Self"}*`
 }
 export const IndPrefix = (Pref: string): string => {
 	return `Prefix anda untuk saat ini adalah *[${Pref}]*`
 }
 export const IndSpammer = (): string => {
-	return `Warning Harap tunggu perintah anda sebelumnya berakhir untuk mencegah terjadinya spam`
+	return `Spam detected!, Harap tunggu sebentar untuk mencegah terjadinya spam`
 }
 export const IndStickerReply = (command: string): string => {
-	return `Maaf ka harap Kirim/ reply Gambar/video/sticker dengan caption ${command} untuk menggunakan fitur sticker`
+	return `Maaf ka harap Kirim/reply Gambar/video/sticker dengan caption ${command} untuk menggunakan fitur sticker`
 }
 export const IndSpam5S = (jeda: string): string => {
 	return `Maaf ka setelah anda menggunakan command ada jeda ${jeda} detik untuk anda bisa menggunakan command kembali`
@@ -168,57 +164,56 @@ export const StickerDuplicate = (sender: string, posisi: number): string => {
 	return `Maaf ka media itu udah pernah dijadiin sticker sebelumnya di grup ini sebelumnya si @${sender.replace("@s.whatsapp.net", "")}, Urutan ${posisi} sebelumnya`
 }
 export const StickerFound = (sender: string): string => {
-	return `Ini ka @${sender.replace("@s.whatsapp.net", "")} stickernya jangan menggunakan media yang sama`
+	return `Ini ka @${sender.replace("@s.whatsapp.net", "")}, Stickernya jangan menggunakan media yang sama`
 }
 export const BotGaAdmin = () => {
-	return `Maaf Bot bukan admin tidak bisa melaksanakan perintah`
+	return `Maaf Bot bukan admin. Tidak bisa melaksanakan perintah`
 }
 export const PilihBukatutup = () => {
-	return `Format salah Pilih buka/tutup`
+	return `Format salah, pilih buka/tutup`
 }
-export const BukanDalamGroup = () => {
-	return `Maaf ka bot bukan Perintah ini hanya tersedia didalam group`
+export const BukanDalamgrup = () => {
+	return `Maaf ka, perintah ini hanya tersedia didalam grup`
 }
 export const UserBaruOut = () => {
-	return `Maaf user tersebut baru baru ini keluar group anda tidak bisa memasukkannya`
+	return `Maaf, user tersebut baru-baru ini keluar grup. Anda tidak bisa memasukkannya`
 }
-export const UserDalamGroup = () => {
-	return `Maaf user tersebut telah berada didalam group`
+export const UserDalamgrup = () => {
+	return `Maaf, user tersebut telah berada didalam grup`
 }
-export const UserGadaDalamGroup = () => {
-	return `Maaf user tersebut tidak ada didalam group`
+export const UserGadaDalamgrup = () => {
+	return `Maaf, user tersebut tidak ada didalam grup`
 }
 export const UserPrivate = () => {
-	return `Maaf tidak dapat menginvit user tersebut kedalam group kemungkinan di private`
+	return `Maaf, tidak dapat menginvite user tersebut kedalam grup. Kemungkinan di private`
 }
 export const SuccesAdd= () => {
-	return `Succes add member ke group`
+	return `Berhasil add member ke grup`
 }
 export const AddHarapTagSeseorang = () => {
-	return `Maaf ka harap tag/ reply seseorang yang ingin ditambahkan`
+	return `Maaf ka, harap tag/reply seseorang yang ingin ditambahkan`
 }
 export const TagOrReply = () => {
-	return `Maaf ka Harap tag/reply seseorang`
+	return `Maaf ka, harap tag/reply seseorang`
 }
-export const isOwnerGroupNokick = () => {
-	return `Maaf Bot tidak dapat mengeluarkan owner group`
+export const isOwnergrupNokick = () => {
+	return `Maaf, Bot tidak dapat mengeluarkan owner grup`
 }
 export const kickSucces = (sender: string) => {
 	return `Berhasil mengeluarkan @${sender.replace("@s.whatsapp.net", "")}`
 }
 export const Admindia = (sender: string) => {
-	return `Tidak dapat mengeluarkan @${sender.replace("@s.whatsapp.net", "")} karena sesama admin, Hanya owner group yang bisa mengeluarkan admin`
+	return `Tidak dapat mengeluarkan @${sender.replace("@s.whatsapp.net", "")} karena sesama admin, Hanya owner grup yang bisa mengeluarkan admin`
 }
 export const ButakahLinkGc = () => {
-	return `Butakah ? di deskripsi group ada tod, caper caper`
+	return `Silahkan ambil linknya di desc grup`
 }
-export const IndLinkGroup = (groupMetadata: WAGroupMetadata, link: string) => {
-	return `
-Group : ${groupMetadata.subject}
-Link: ${link}`
+export const IndLinkgrup = (grupMetadata: WAgrupMetadata, link: string) => {
+	return `*grup :* ${grupMetadata.subject}
+*Link :* ${link}`
 }
 export const SuccesOpenCloseGc = (Status: boolean) => {
-	return Status ? "Berhasil menutup group" : "Berhasil membuka group"
+	return Status ? "Berhasil menutup grup" : "Berhasil membuka grup"
 }
 export const PromoteSuccess = (tag: string) => {
 	return `Berhasil menjadikan ${tag.replace("@s.whatsapp.net", "")} seorang admin`
@@ -230,22 +225,22 @@ export const PromoteDiaAdmin = (tag: string) => {
 	return `Anda tidak dapat menaikkan jabatan ${tag.replace("@s.whatsapp.net", "")} karena dia sudah menjadi admin`
 }
 export const DemoteBukanAdmin = (tag: string) => {
-	return `Gagal, anda tidak dapat menurunkan jabatan ${tag.replace("@s.whatsapp.net", "")} karena dia bukan admin`
+	return `Anda tidak dapat menurunkan jabatan ${tag.replace("@s.whatsapp.net", "")} karena dia bukan admin`
 } 
 export const GagalUpdatePP = () => {
 	return `Terjadi kesalahan saat ingin mengubah profile grup`
 }
 export const SuccesUpdatePP = () => {
-	return `Berhasil mengubah foto profil group`
+	return `Berhasil mengubah foto profil grup`
 }
 export const SuccesSetName = (nama: string) => {
-	return `Berhasil mengubah nama  menjadi ${nama}`
+	return `Berhasil mengubah nama menjadi *${nama}*`
 }
 export const SuccesSetDesk = () => {
-	return `Berhasil mengubah deskripsi group`
+	return `Berhasil mengubah deskripsi grup`
 }
 export const IndListOn = (result: { id: string, nama: string | undefined}[]): string => {
-	let Text: string = `*LIST ONLINE*\n\n`
+	let Text: string = `*-ˋˏ List Online ˎˊ-*\n`
 	let count: number = 1
 	for (let respon of result) {
 		Text += count + ". " + "@" + respon.id.replace("@s.whatsapp.net", "") + ` (${respon.nama})\n`
@@ -254,45 +249,39 @@ export const IndListOn = (result: { id: string, nama: string | undefined}[]): st
 	return Text
 }
 export const IndGadaOn = () =>{
-	return `Maaf untuk saat ini tidak ada yang terlihat online`
+	return `Untuk saat ini tidak ada yang terlihat online`
 }
 export const IndVoteStart = (pelapor: string, target: string, alasan: string, time: number) => {
-	return `*VOTING*
-
-Pengajuan Voting : @${pelapor.replace('@s.whatsapp.net','')}
-Target Vote : @${target.replace('@s.whatsapp.net','')}
-Alasan : ${alasan}
-
+	return `*-ˋˏ Voting ˎˊ-*
+*Pengajuan Voting :* @${pelapor.replace('@s.whatsapp.net','')}
+*Target Vote :* @${target.replace('@s.whatsapp.net','')}
+*Alasan :* ${alasan}
 
 
 Ketik *vote* Jika setuju
 Ketik *devote* Jika tidak
 
-Voting berlangsung selama ${time} Menit
-`
+Voting berlangsung selama ${time} Menit`
 }
 export const IndVoting = (pelapor: string, target: string, alasan: string, data: any) => {
-	let Text = `
-*VOTING*
-	
-Pengajuan Voting : @${pelapor.replace('@s.whatsapp.net','')}
-Target Vote : @${target.replace('@s.whatsapp.net','')}
-Alasan : ${alasan}
-	
-	
+	let Text = `*-ˋˏ Voting ˎˊ-*
+*Pengajuan Voting :* @${pelapor.replace('@s.whatsapp.net','')}
+*Target Vote :* @${target.replace('@s.whatsapp.net','')}
+*Alasan :* ${alasan}
+
+
 Ketik *vote* Jika setuju
-Ketik *devote* Jika tidak\n\n
-`
+Ketik *devote* Jika tidak`
 let Vote: number = 1
 let Devote: number = 1
 let vote:  { id: string | null | undefined, status: string, pushname: string }[] = data.filter((value: { id: string | null | undefined, status: string, pushname: string }) => value.status == "vote")
 let devote:  { id: string | null | undefined, status: string, pushname: string }[] = data.filter((value: { id: string | null | undefined, status: string, pushname: string }) => value.status == "devote")
-Text += "  VOTE\n\n"
+Text += "*-ˋˏ Vote ˎˊ-*\n"
 for (let result of vote) {
 	Text += `${Vote}. ${result.pushname} *(${result.id?.replace("@s.whatsapp.net", "")})*\n`
 	Vote++
 }
-Text += "\n\n  DEVOTE\n\n"
+Text += "\n*-ˋˏ Devote ˎˊ-*\n"
 for (let result of devote) {
 	Text += `${Devote}. ${result.pushname} *(${result.id?.replace("@s.whatsapp.net", "")})*\n`
 	Devote++
@@ -300,33 +289,30 @@ for (let result of devote) {
 return Text
 }
 export const IndHasilVote = (pelapor: string, target: string, alasan: string, data: any) => {
-	let Text: string = `
-*VOTING*
-	
-Pengajuan Voting : @${pelapor.replace('@s.whatsapp.net','')}
-Target Vote : @${target.replace('@s.whatsapp.net','')}
-Alasan : ${alasan}\n\n\n
-`
+	let Text: string = `*-ˋˏ Voting ˎˊ-*
+*Pengajuan Voting :* @${pelapor.replace('@s.whatsapp.net','')}
+*Target Vote :* @${target.replace('@s.whatsapp.net','')}
+*Alasan :* ${alasan}\n\n`
 let Vote: number = 1
 let Devote: number = 1
 let vote:  { id: string | null | undefined, status: string, pushname: string }[] = data.filter((value:  { id: string | null | undefined, status: string, pushname: string }) => value.status == "vote")
 let devote:  { id: string | null | undefined, status: string, pushname: string }[] = data.filter((value:  { id: string | null | undefined, status: string, pushname: string }) => value.status == "devote")
-Text += `VOTING BERAKHIR DENGAN HASIL :\n\n Vote : ${(vote.length)}\nDevote : ${(devote.length)}\n\n\n`
-Text += "  VOTE\n\n"
+Text += `Voting berakhir dengan hasil :\n${(vote.length)}\nDevote : ${(devote.length)}\n\n\n`
+Text += "*-ˋˏ Vote ˎˊ-*\n"
 for (let result of vote) {
 	Text += `${Vote}. ${result.pushname} *(${result.id?.replace("@s.whatsapp.net", "")})*\n`
 	Vote++
 }
-Text += "\n\n  DEVOTE\n\n"
+Text += "\n*-ˋˏ Devote ˎˊ-*\n"
 for (let result of devote) {
 	Text += `${Devote}. ${result.pushname}  *(${result.id?.replace("@s.whatsapp.net", "")})*\n`
 	Devote++
 }
-Text += "\n\n*VOTING DITUTUP*"
+Text += "\n*Voting di tutup*"
 return Text
 }
 export const IndTagall = (data: string[] | undefined) => {
-	let Text: string = "*TAGALL*\n\n"
+	let Text: string = "*-ˋˏ Tag All ˎˊ-*\n"
 	let count: number = 1
 	for (let result of data || []) {
 		Text += count + ". " + "@" + result.replace("@s.whatsapp.net", "") + "\n"
@@ -335,16 +321,16 @@ export const IndTagall = (data: string[] | undefined) => {
 	return Text
 }
 export const IndRevoked = (nama: string) => {
-	return `Berhasil mereset link group ${nama}`
+	return `Berhasil mereset link grup ${nama}`
 }
 export const IndSesiVotingAda = () => {
-	return `Maaf sesi voting sedang berlangsung di grup ini selesaikan sesi voting terlebih dahulu/ admin group bisa mereset sesi voting`
+	return `Maaf sesi voting sedang berlangsung di grup ini, selesaikan sesi voting terlebih dahulu/admin grup bisa mereset sesi voting`
 }
 export const IndSesiVotingGada = () => {
-	return `Maaf sesi voting tidak ada dalam group ini harap aktifkan sesi voting terlebih dahulu`
+	return `Maaf sesi voting tidak ada dalam grup ini, harap aktifkan sesi voting terlebih dahulu`
 }
 export const IndResetSesi = () => {
-	return `Berhasil menghapus sesi voting dalam group ini`
+	return `Berhasil menghapus sesi voting dalam grup ini`
 }
 export const IndVoteLebih15 = () => {
 	return `Maaf waktu voting tidak boleh lebih dari 15 menit`
@@ -359,11 +345,11 @@ export const DiaKeluarVote = () => {
 	return `Yah Out, voting ditutup`
 }
 export const BukanStickerGif = () => {
-	return `Maaf ka itu bukan sticker gif harap gunakan sticker gif`
+	return `Maaf ka, stiker bukan berformat gif`
 }
 export const InputImage = () => {
-	return `Maaf ka harap kirim / reply gambar dengan caption`
+	return `Maaf ka, harap kirim/reply gambar dengan caption`
 }
 export const IndBukanSgif = () => {
-	return `Maaf ka sticker gif tidak bisa dijadiin profil`
+	return `Maaf ka, sticker gif tidak bisa dijadiin profil`
 }
