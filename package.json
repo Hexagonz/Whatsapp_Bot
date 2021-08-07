@@ -8,23 +8,31 @@
   },
   "dependencies": {
     "@adiwajshing/baileys": "github:adiwajshing/baileys",
+    "@types/diacritics": "^1.3.1",
+    "@types/fast-levenshtein": "0.0.2",
     "@types/figlet": "^1.5.4",
+    "@types/lodash": "^4.14.172",
+    "@types/monk": "^6.0.0",
     "@types/prompt-sync": "^4.1.1",
     "@types/yt-search": "^2.3.2",
     "axios": "^0.21.1",
     "build": "^0.1.4",
     "chalk": "^4.1.1",
     "cheerio": "^1.0.0-rc.10",
+    "diacritics": "^1.3.0",
     "dotenv": "^10.0.0",
     "figlet": "^1.5.0",
     "filesize": "^7.0.0",
     "fluent-ffmpeg": "^2.1.2",
     "form-data": "^4.0.0",
-    "get-emails": "^3.0.0",
     "gifencoder": "^2.0.1",
     "got": "^11.8.2",
+    "jimp": "^0.16.1",
     "moment-timezone": "^0.5.33",
+    "monk-middleware-wrap-non-dollar-update": "^0.2.1",
+    "moongoose": "0.0.5",
     "node-webpmux": "^3.1.0",
+    "parse-ms": "^2.1.0",
     "prompt-sync": "^4.2.0",
     "typescript": "^4.3.5",
     "util": "^0.12.4",
@@ -37,7 +45,8 @@
     "@types/ms": "^0.7.31"
   },
   "scripts": {
-    "test": " \"echo \\\"Error: no test specified\\\" && exit 1\""
+    "test": " \"echo \\\"Error: no test specified\\\" && exit 1\"",
+    "prettier-format": "prettier --config .prettierrc \"lib/**/*.ts\" --write"
   },
   "repository": {
     "type": "git",

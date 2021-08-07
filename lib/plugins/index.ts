@@ -1,2 +1,1 @@
-export * from "./static";
-export * from "./register";
+export * from './static'
