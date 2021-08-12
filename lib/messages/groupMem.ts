@@ -109,7 +109,7 @@ export class groupMembers {
 			let CheckRespon = result.get(from)
             if (Number(vote?.length) > 15 && CheckMem && isBotAdmins) return  (CheckRespon.action.map((value: any) => {  Voters.delete(from + value.id )}))  && (result.delete(from) &&  (await this.Ra.sendMessage(from, BerhasilKickVote(data.target), MessageType.extendedText, { contextInfo: { mentionedJid: [data.target] }}))  && this.Ra.groupRemove(from, [data.target])) 
 			if (Number(vote.length) > 15 && CheckMem) return  (CheckRespon.action.map((value: any) => {  Voters.delete(from + value.id )})) && result.delete(from) && await this.Ra.sendMessage(from, BerhasilVote(data.target), MessageType.extendedText, { contextInfo: { mentionedJid: [data.target] }})
-            if (Number(devote?.length) > 1) return  (CheckRespon.action.map((value: any) => {  Voters.delete(from + value.id )})) && result.delete(from) && (await this.Ra.sendMessage(from, CancelVote(), MessageType.text))
+            if (Number(devote?.length) > 15) return  (CheckRespon.action.map((value: any) => {  Voters.delete(from + value.id )})) && result.delete(from) && (await this.Ra.sendMessage(from, CancelVote(), MessageType.text))
             const Body: string = bodyButton == '' ? Command : bodyButton || ''
 			if (!sender) return
             switch (Body.toLocaleLowerCase()) {
