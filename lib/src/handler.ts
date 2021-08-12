@@ -12,52 +12,21 @@ export class HandlerMsg extends Validation {
             if (!chats.hasNewMessage) return
             const mess: WAMessage | undefined = chats.messages?.all()[0]
             if (mess?.key && mess.key.remoteJid === 'status@broadcast') return
-            const {
-                message,
-                from,
-                isGroupMsg,
-                type,
-                quotedType,
-                typeQuoted,
-                quotedMsg,
-                bodyQuoted,
-                bodyButton,
-                body,
-                media,
-                sender
-            }: Validasi = this.validator(mess)
-            const groupMetadata: WAGroupMetadata | null = isGroupMsg
-                ? await this.client.groupMetadata(from || '')
-                : null
-            const contacts: string | WAContact | any = mess?.key.fromMe
-                ? this.client.user.jid
-                : this.client.contacts[sender || ''] || {
-                      notify: sender?.replace(/@.+/, '')
-                  }
+            const { message, from, isGroupMsg, type, typeQuoted, body, sender }: Validasi = this.validator(mess)
+            const groupMetadata: WAGroupMetadata | null = isGroupMsg ? await this.client.groupMetadata(from || '') : null
+            const contacts: string | WAContact | any = mess?.key.fromMe ? this.client.user.jid : this.client.contacts[sender || ''] || { notify: sender?.replace(/@.+/, '') }
             const content: string = JSON.stringify(message?.message)
-            const pushname: string = mess?.key.fromMe
-                ? this.client.user.name
-                : contacts?.notify || contacts.vname || contacts.name || 'Tidak Terdeteksi'
+            const pushname: string = mess?.key.fromMe ? this.client.user.name : contacts?.notify || contacts.vname || contacts.name || 'Tidak Terdeteksi'
             const fromMe: boolean | undefined | null = mess?.key ? mess.key.fromMe : false
             const isBot: boolean | undefined = mess?.key ? mess.key.id?.startsWith('3EB0') : false
             const botNumber: string = this.client.user.jid
-            const bot: WAGroupParticipant | {} | undefined = isGroupMsg
-                ? groupMetadata?.participants.find((v) => v.jid === this.client.user.jid)
-                : {}
-            const user: WAGroupParticipant | {} | undefined = isGroupMsg
-                ? groupMetadata?.participants.find((v) => v.jid === this.client.user.jid)
-                : {}
+            const bot: WAGroupParticipant | {} | undefined = isGroupMsg ? groupMetadata?.participants.find((v) => v.jid === this.client.user.jid) : {}
+            const user: WAGroupParticipant | {} | undefined = isGroupMsg ? groupMetadata?.participants.find((v) => v.jid === this.client.user.jid) : {}
             const ownerNumber: string[] = [String(process.env.ownerNumber), botNumber]
             const sendOwner: string = ownerNumber[0]
             const isOwner: boolean = ownerNumber.includes(sender || '')
             const groupMember: WAGroupParticipant[] | null | undefined = isGroupMsg ? groupMetadata?.participants : null
-            const groupAdmins: string[] = isGroupMsg
-                ? groupMember !== null
-                    ? groupMember?.filter((value) => value.isAdmin == true)
-                        ? groupMember.filter((value) => value.isAdmin == true).map((value) => value.jid)
-                        : []
-                    : []
-                : []
+            const groupAdmins: string[] = isGroupMsg ? groupMember !== null ? groupMember?.filter((value) => value.isAdmin == true) ? groupMember.filter((value) => value.isAdmin == true).map((value) => value.jid) : [] : [] : []
             const isGroupAdmins: boolean = isGroupMsg ? groupAdmins.includes(sender || '') : false
             const isBotAdmins: boolean = isGroupMsg ? groupAdmins.includes(botNumber) : false
             const ownerGroup: string | null | undefined = isGroupMsg ? groupMetadata?.owner : null

@@ -128,7 +128,7 @@ export class register extends Mongoose {
             await this.register.findOneAndUpdate({ id: sender }, { $set: { multi: true } })
             return true
         } else {
-            await this.register.findOneAndUpdate({ id: sender }, { $set: { multi: true } })
+            await this.register.findOneAndUpdate({ id: sender }, { $set: { multi: false } })
             return false
         }
     }

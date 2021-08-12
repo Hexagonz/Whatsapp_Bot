@@ -4,7 +4,7 @@ import { WAChatUpdate, WAConnection } from '@adiwajshing/baileys'
 import { HandlerMsg } from './handler'
 import { HandlingMessage } from '../typings'
 import { Command } from './command'
-import { GroupCommands, groupMembers, CheckUpdate } from '../messages'
+import { GroupGuards, groupMembers, CheckUpdate } from '../messages'
 import { Detector } from './detector'
 import { Client } from './Client'
 import { IndPublicSucces, IndPublicDuplicate } from '../lang/ind'
@@ -17,7 +17,7 @@ export class Main {
     public client: WAConnection = new WAConnection()
     public message: HandlerMsg = new HandlerMsg(this.client, this.database)
     public Ra: Client = new Client(this.client)
-    private Respon: GroupCommands = new GroupCommands(this.Ra, this.database)
+    private Respon: GroupGuards = new GroupGuards(this.Ra, this.database)
     private Update: CheckUpdate = new CheckUpdate(this.client)
     protected detector: any
     constructor() {}
@@ -35,7 +35,7 @@ export class Main {
             this.detector.Handling()
             globalThis.prefix = data.Prefix
             globalThis.CMD = new Command(globalThis.prefix)
-            this.Respon.sendHandling()
+            this.Respon.sendGlobal()
             new groupMembers(this.client, data).sendDataMembers()
             this.detector.CommnadGlobal()
             if (/^(publik|public)/i.test(data.Command) && data.isOwner) {

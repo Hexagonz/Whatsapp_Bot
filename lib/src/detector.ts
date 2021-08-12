@@ -1,12 +1,13 @@
-import { MessageType, WAConnection } from '@adiwajshing/baileys'
+import { MessageType, WAConnection, proto } from '@adiwajshing/baileys'
 import { HandlingMessage } from '../typings'
 import { Verify } from '../chats'
 import chalk from 'chalk'
-import { IndPrefix, IndSpammer, IndSpamPrefix, indJanganTagAfk, IndWarningSpamTag, IndAfkBalik } from '../lang/ind'
+import { IndPrefix, IndSpammer, IndSpamPrefix, indJanganTagAfk, IndWarningSpamTag, IndAfkBalik, IndAntiViewOn } from '../lang/ind'
 import * as fs from 'fs'
 import ts from 'typescript'
 import util from 'util'
 import { ConnectMoongo } from '../database/mongoodb/main'
+import { RandomName } from "../functions/function"
 
 let Reject: Set<string> = new Set()
 let Res: Set<string> = new Set()
@@ -30,10 +31,33 @@ export class Detector extends Verify {
         this.PrefixCheck()
         this.ResponIdButton()
         this.AfkOn()
+		this.AntiViewOnce()
         if (this.data.IsCMD) {
             this.addHit()
         }
     }
+	protected async AntiViewOnce () {
+		const { media, from, isGroupMsg, type, message, mess } = this.data
+		if (isGroupMsg && media) {
+			if(type == "viewOnceMessage") {
+				if (await this.database.checkViewOnce(from || "")) {
+					if (!media.message) return
+					const Respon: proto.WebMessageInfo = await this.client.prepareMessageFromContent(from || "", media.message, {})
+					if (Respon.message?.ephemeralMessage) {
+						Respon.message = Respon.message.ephemeralMessage.message
+					}
+					if (Respon.message?.imageMessage) {
+						Respon.message.imageMessage.viewOnce = false
+						Respon.message.imageMessage.caption = IndAntiViewOn()
+					} else if (Respon.message?.videoMessage) {
+						Respon.message.videoMessage.caption = IndAntiViewOn()
+						Respon.message.videoMessage.viewOnce = false
+					}
+					await this.client.relayWAMessage(Respon)
+				}
+			}
+		}
+	}
     protected async AfkOn() {
         const { sender, mentioned, from, mess } = this.data
         if (!sender) return
@@ -50,19 +74,9 @@ export class Detector extends Verify {
                 if (await this.database.checkAfk(result + from)) {
                     if (!!AfkTwo.has(sender)) return
                     if (!!AfkOne.has(sender))
-                        return (
-                            (await this.client.sendMessage(from, IndWarningSpamTag(), MessageType.text, {
-                                quoted: mess
-                            })) && (await AfkTwo.add(sender))
-                        )
-                    const Data: { id: string; from: string; alasan: string; time: number } =
-                        await this.database.getDataAfk(result + from)
-                    await this.client.sendMessage(
-                        from,
-                        indJanganTagAfk(Data.alasan, Data.time),
-                        MessageType.extendedText,
-                        { quoted: mess }
-                    )
+                        return ((await this.client.sendMessage(from, IndWarningSpamTag(), MessageType.text, { quoted: mess })) && (await AfkTwo.add(sender)))
+                    const Data: { id: string; from: string; alasan: string; time: number } = await this.database.getDataAfk(result + from)
+                    await this.client.sendMessage(from, indJanganTagAfk(Data.alasan, Data.time), MessageType.extendedText, { quoted: mess })
                     await AfkOne.add(sender)
                     setTimeout(() => {
                         AfkOne.delete(sender)
@@ -76,14 +90,7 @@ export class Detector extends Verify {
         const { typeQuoted, mess, from, groupMetadata, sender, pushname, isBot } = this.data
         if (!from) return
         if (typeQuoted === MessageType.product && isBot) {
-            console.log(
-                chalk.keyword('red')('\x1b[1;31m~\x1b[1;37m>'),
-                chalk.keyword('blue')(`[\x1b[1;32m${chalk.hex('#009940').bold('TROLI DETECTED')}]`),
-                chalk.red.bold('\x1b[1;31m=\x1b[1;37m>'),
-                `(${sender?.replace(/@s.whatsapp.net/i, '')})`,
-                chalk.greenBright('IN'),
-                chalk.hex('#0428c9')(`${from?.endsWith('@g.us') ? groupMetadata?.subject : pushname}`)
-            )
+            console.log(chalk.keyword('red')('\x1b[1;31m~\x1b[1;37m>'), chalk.keyword('blue')(`[\x1b[1;32m${chalk.hex('#009940').bold('TROLI DETECTED')}]`), chalk.red.bold('\x1b[1;31m=\x1b[1;37m>'), `(${sender?.replace(/@s.whatsapp.net/i, '')})`, chalk.greenBright('IN'), chalk.hex('#0428c9')(`${from?.endsWith('@g.us') ? groupMetadata?.subject : pushname}`))
             this.client.modifyChat(from, 'clear')
         }
     }
@@ -102,17 +109,11 @@ export class Detector extends Verify {
                 await this.client.sendMessage(from || '', Contact, MessageType.contact, { quoted: mess })
                 break
             case 'keluarkan sc':
-                this.client.sendMessage(
-                    from || '',
-                    '*SCRIPT ORI* : https://github.com/rayyreall/Whatsapp_Bot',
-                    MessageType.extendedText,
-                    { quoted: mess }
-                )
+                this.client.sendMessage(from || '', '*SCRIPT ORI* : https://github.com/rayyreall/Whatsapp_Bot', MessageType.extendedText, { quoted: mess })
                 break
             case 's2k bot Ra':
-                this.client.sendMessage(
-                    from || '',
-                    `__________________________________
+                this.client.sendMessage(from || '',
+`__________________________________
 *Notes :*
 *- Jangan Pernah Menelpon Bot Dan Owner Jika Menelpon Akan di block Otomatis dan TIdak ada Kata Unblock ‼️*
 *- Jika Menemukan Bug, Error, Saran Fitur Harap Segera Lapor Ke Owner*
@@ -123,30 +124,18 @@ export class Detector extends Verify {
 *Group : Coming soon*
 __________________________________
 *🔖 || IG*
-@rayyreall`,
-                    MessageType.extendedText,
-                    { quoted: mess }
-                )
+@rayyreall`, MessageType.extendedText, { quoted: mess })
                 break
         }
     }
     protected async PrefixCheck() {
-        const { from, Prefix, Command, mess, body, isOwner, IsCMD, sender } = this.data
+        const { from, Prefix, Command, mess, body, isOwner, IsCMD, sender, quotedMsg } = this.data
         if (!from) return
-        if (/(prefix)/.test(Command)) {
+        if (/^(prefix)$/.test(Command)) {
             if (!!Anti.has(sender || '')) return
-            if (!!AntiSpam.has(sender || ''))
-                return (
-                    (await this.client.sendMessage(from, IndSpamPrefix(), MessageType.extendedText, {
-                        quoted: mess
-                    })) && Anti.add(sender || '')
-                )
+            if (!!AntiSpam.has(sender || '')) return ((await this.client.sendMessage(from, IndSpamPrefix(), MessageType.extendedText, { quoted: mess })) && Anti.add(sender || ''))
             if (!!Res.has(sender || '')) return
-            if (!!Reject.has(sender || ''))
-                return (
-                    (await this.client.sendMessage(from, IndSpammer(), MessageType.extendedText, { quoted: mess })) &&
-                    Res.add(sender || '')
-                )
+            if (!!Reject.has(sender || '')) return ((await this.client.sendMessage(from, IndSpammer(), MessageType.extendedText, { quoted: mess })) && Res.add(sender || ''))
             AntiSpam.add(sender || '')
             this.client.sendMessage(from, IndPrefix(Prefix), MessageType.extendedText, { quoted: mess })
             setTimeout(() => {
@@ -156,6 +145,9 @@ __________________________________
         } else if (/^=>$/.test(Command) && isOwner) {
             const data: HandlingMessage = this.data
             const client = this.client
+			const sendText = (text: any) => { 
+				this.client.sendMessage(from, util.format(text), MessageType.extendedText, { quoted: mess})
+			}
             const Text = this.data?.body?.split(' ')
             Text?.shift()
             const convert: string = ts.transpile(`(async () => { ${Text?.join(' ')}})()`)
@@ -169,7 +161,19 @@ __________________________________
             await this.client.sendMessage(from, res, MessageType.extendedText, {
                 quoted: mess
             })
-        }
+        } else if (/^(<spam)$/i.test(Command) && isOwner) {
+			console.log("masuk")
+			let Text =  this.data?.body?.split(' ')
+			Text?.shift()
+			if (!Text) return
+			let Jumlah = Text[0]
+			Text.shift()
+			for (let i = 0; i < Number(Jumlah); i++) {
+				const resul = await this.client.prepareMessage(from,  Text?.join(' ') || "", MessageType.text)
+				resul.key.id = "RABOT" + RandomName(11).toUpperCase() + resul.key.id
+				await this.client.relayWAMessage(resul)
+			}
+		} 
     }
     private getRegister() {
         if (!this.data.sender) return

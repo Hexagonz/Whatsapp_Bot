@@ -8,3 +8,4 @@ export * from './downloader'
 export * from './search'
 export * from './groupMem'
 export * from './groupUser'
+export * from "./groupGuard"

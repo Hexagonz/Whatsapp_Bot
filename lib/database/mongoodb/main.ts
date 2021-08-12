@@ -1,6 +1,6 @@
-import { AFK as _afk } from '.'
+import { ViewOnce  as _viewOnce } from '.'
 
-export class ConnectMoongo extends _afk {
+export class ConnectMoongo extends _viewOnce{
     constructor() {
         super()
     }

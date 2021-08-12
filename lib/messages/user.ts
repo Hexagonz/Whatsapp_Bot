@@ -11,18 +11,7 @@ import * as fs from 'fs'
 import { ConnectMoongo } from '../database/mongoodb/main'
 import { config } from 'dotenv'
 config({ path: './.env' })
-import {
-    IndSuccesSetPrefix,
-    IndSuccesSetMulti,
-    IndDonePushMulti,
-    IndErrPushMulti,
-    IndDoneDelMulti,
-    IndErrDelMulti,
-    IndMultiData,
-    BerhasilJoin,
-    IndGagalJoin,
-    IndSudahDalamGc
-} from '../lang/ind'
+import { IndSuccesSetPrefix, IndSuccesSetMulti, IndDonePushMulti, IndErrPushMulti, IndDoneDelMulti, IndErrDelMulti, IndMultiData, BerhasilJoin, IndGagalJoin, IndSudahDalamGc } from '../lang/ind'
 
 const LajuCepat: number = Speed()
 const Ping: string = (Speed() - LajuCepat).toFixed(4)
@@ -44,25 +33,16 @@ export class UserHandler extends Convert {
         this.Join()
     }
     private setPrefix(): void {
-        globalThis.CMD.on(
-            'user|setprefix <prefix>',
-            ['setprefix'],
-            async (res: WAConnection, data: Commands) => {
-                const { from, mess, sender, args } = data
-                if (!sender) return
-                await this.database.setprefix(sender, args[0])
-                return void this.Ra.reply(
-                    from,
-                    IndSuccesSetPrefix(args[0], await this.database.statusPrefix(sender)),
-                    mess
-                )
-            },
-            { noPrefix: false }
-        )
+        globalThis.CMD.on('user|setprefix <prefix>', ['setprefix'], async (res: WAConnection, data: Commands) => {
+			const { from, mess, sender, args } = data
+            if (!sender) return
+			await this.database.setprefix(sender, args[0])
+			return void this.Ra.reply(from, IndSuccesSetPrefix(args[0], await this.database.statusPrefix(sender)), mess)
+		}, { noPrefix: false })
     }
     private checkMulti(): void {
         globalThis.CMD.on('user|cekmulti', 'cekmulti', async (res: WAConnection, data: Commands) => {
-            const { from, mess, sender } = data
+			const { from, mess, sender } = data
             if (!sender) return
             const hasil: string | undefined = await this.database.getMultiPrefix(sender)
             if (typeof hasil !== 'string') return
@@ -70,10 +50,7 @@ export class UserHandler extends Convert {
         })
     }
     private addPrefix(): void {
-        globalThis.CMD.on(
-            'user|addmulti <prefix>',
-            ['addmulti'],
-            async (res: WAConnection, data: Commands) => {
+        globalThis.CMD.on('user|addmulti <prefix>', ['addmulti'], async (res: WAConnection, data: Commands) => {
                 const { from, mess, sender, args } = data
                 if (args[0] == undefined) return this.Ra.reply(from, IndErrPushMulti(), mess)
                 if (!sender) return
@@ -90,66 +67,48 @@ export class UserHandler extends Convert {
         })
     }
     private delPrefix(): void | undefined {
-        globalThis.CMD.on(
-            'user|delmulti <prefix>',
-            ['delmulti'],
-            async (res: WAConnection, data: Commands) => {
-                const { from, mess, sender, args } = data
-                if (!sender) return
-                if (args[0] == undefined) return this.Ra.reply(from, IndErrDelMulti(), mess)
-                await this.database.delMultiPrefix(sender, args[0])
-                return void this.Ra.reply(from, IndDoneDelMulti(args[0]), mess)
-            },
-            { noPrefix: false }
-        )
+        globalThis.CMD.on('user|delmulti <prefix>', ['delmulti'], async (res: WAConnection, data: Commands) => {
+			const { from, mess, sender, args } = data
+            if (!sender) return
+            if (args[0] == undefined) return this.Ra.reply(from, IndErrDelMulti(), mess)
+            await this.database.delMultiPrefix(sender, args[0])
+            return void this.Ra.reply(from, IndDoneDelMulti(args[0]), mess)
+		}, { noPrefix: false })
     }
     private multiPrefix(): void {
-        globalThis.CMD.on(
-            'user|multi <on/off>',
-            ['multi'],
-            async (res: WAConnection, data: Commands) => {
-                const { from, mess, sender, args } = data
-                if (!sender) return
-                if (args[0] == 'on') {
-                    await this.database.multiPRefix(true, sender)
-                    return void this.Ra.reply(from, IndSuccesSetMulti(true), mess)
-                } else if (args[0] == 'off') {
-                    await this.database.multiPRefix(true, sender)
-                    return void this.Ra.reply(from, IndSuccesSetMulti(false), mess)
-                }
-            },
-            { noPrefix: false }
-        )
+        globalThis.CMD.on('user|multi <on/off>', ['multi'], async (res: WAConnection, data: Commands) => {
+            const { from, mess, sender, args } = data
+            if (!sender) return
+            if (args[0] == 'on') {
+				await this.database.multiPRefix(true, sender)
+				return void this.Ra.reply(from, IndSuccesSetMulti(true), mess)
+            } else if (args[0] == 'off') {
+                await this.database.multiPRefix(false, sender)
+                return void this.Ra.reply(from, IndSuccesSetMulti(false), mess)
+			}
+		}, { noPrefix: false })
     }
     private Join() {
         globalThis.CMD.on('user|join <link gc>', ['join', 'gabung'], async (res: WAConnection, data: Commands) => {
             const { from, mess, args, bodyQuoted, quotedMsg } = data
-            let check: RegExpMatchArray | null | undefined = args[0]
-                ? args.join(' ').match(/(?:http(?:s|):\/\/|)chat.whatsapp.com\/([0-9A-Za-z]{20,24})/i)
-                : quotedMsg
-                ? bodyQuoted?.match(/(?:http(?:s|):\/\/|)chat.whatsapp.com\/([0-9A-Za-z]{20,24})/i)
-                : []
+            let check: RegExpMatchArray | null | undefined = args[0] ? args.join(' ').match(/(?:http(?:s|):\/\/|)chat.whatsapp.com\/([0-9A-Za-z]{20,24})/i) : quotedMsg ? bodyQuoted?.match(/(?:http(?:s|):\/\/|)chat.whatsapp.com\/([0-9A-Za-z]{20,24})/i) : []
             if (!check) return this.Ra.reply(from, IndGagalJoin(), mess)
             let [link, id] = check
             let response = await res.query({
                 json: ['query', 'invite', id]
             })
-            if (response.status !== 200) return this.Ra.reply(from, IndGagalJoin(), mess)
             const CheckData: WAChat[] = await res.chats.all()
             if (CheckData.find((value) => value.jid == response.id)) return this.Ra.reply(from, IndSudahDalamGc(), mess)
-            await res
-                .acceptInvite(id)
-                .then(async () => {
-                    this.Ra.reply(from, BerhasilJoin(), mess)
-                })
-                .catch(() => {
-                    this.Ra.reply(from, IndGagalJoin(), mess)
-                })
+            await res.acceptInvite(id).then(async () => {
+				this.Ra.reply(from, BerhasilJoin(), mess)
+			}).catch(() => {
+				this.Ra.reply(from, IndGagalJoin(), mess)
+			})
         })
     }
     private menu(): void {
         globalThis.CMD.on('user|menu', ['menu'], async (res: WAConnection, data: Commands) => {
-            const { from, isOwner, sender, command, Prefix } = data
+			const { from, isOwner, sender, command, Prefix } = data
             const _typeMenu: string[] = Object.keys(globalThis.CMD.events)
             let Converter: string[] = []
             let User: string[] = []
@@ -160,6 +119,7 @@ export class UserHandler extends Convert {
             let GroupMem: string[] = []
             let Musik: string[] = []
             let Voting: string[] = []
+			let Guards: string[] = []
             _typeMenu.map((value: string) => {
                 if (value.startsWith('converter')) {
                     Converter.push(value.split('|')[1])
@@ -179,7 +139,9 @@ export class UserHandler extends Convert {
                     Musik.push(value.split('|')[1])
                 } else if (value.startsWith('group')) {
                     GroupMem.push(value.split('|')[1])
-                }
+                } else if (value.startsWith("guard")) {
+					Guards.push(value.split("|")[1])
+				}
             })
             let informasi: string = `
 👋🏻 Halo ${isOwner ? 'My Owner 🤴🏻' : 'ka'} ${Ucapan()}
@@ -197,43 +159,47 @@ export class UserHandler extends Convert {
 *⚔️ Prefix :* ${Prefix}
 *🔑 Apikey* : 𝐍𝐨𝐭 𝐅𝐨𝐮𝐧𝐝\n\n`
 
-            informasi += '\n         *MENU OWNER*\n\n'
-            for (let result of Owner.sort()) {
-                informasi += `*ℒ⃝🕊️ •* *` + result + '*\n'
-            }
-            informasi += '\n         *MENU USER*\n\n'
-            for (let result of User.sort()) {
-                informasi += `*ℒ⃝🕊️ •* *` + Prefix + result + '*\n'
-            }
-            informasi += '\n         *MENU CONVERTER*\n\n'
-            for (let result of Converter.sort()) {
-                informasi += `*ℒ⃝🕊️ •* *` + Prefix + result + '*\n'
-            }
-            informasi += '\n         *MENU MUSIK*\n\n'
-            for (let result of Musik.sort()) {
-                informasi += `*ℒ⃝🕊️ •* *` + Prefix + result + '*\n'
-            }
-            informasi += '\n         *MENU STORAGE*\n\n'
-            for (let result of Storage.sort()) {
-                informasi += `*ℒ⃝🕊️ •* *` + Prefix + result + '*\n'
-            }
-            informasi += '\n         *MENU STALK*\n\n'
-            for (let result of Stalker.sort()) {
-                informasi += `*ℒ⃝🕊️ •* *` + Prefix + result + '*\n'
-            }
-            informasi += '\n         *MENU ADMIN GROUP*\n\n'
-            for (let result of Group.sort()) {
-                informasi += `*ℒ⃝🕊️ •* *` + Prefix + result + '*\n'
-            }
-            informasi += '\n         *MENU GROUP*\n\n'
-            for (let result of GroupMem.sort()) {
-                informasi += `*ℒ⃝🕊️ •* *` + Prefix + result + '*\n'
-            }
-            informasi += '\n         *VOTING*\n\n'
-            for (let result of Voting.sort()) {
-                informasi += `*ℒ⃝🕊️ •* *` + Prefix + result + '*\n'
-            }
-            informasi += `\n\n__________________________________
+informasi += '\n         *MENU OWNER*\n\n'
+for (let result of Owner.sort()) {
+	informasi += `*ℒ⃝🕊️ •* *` + result.charAt(0).toUpperCase() + result.slice(1) + '*\n'
+}
+informasi += '\n         *MENU USER*\n\n'
+for (let result of User.sort()) {
+	informasi += `*ℒ⃝🕊️ •* *` + Prefix + result.charAt(0).toUpperCase() + result.slice(1)+ '*\n'
+}
+informasi += '\n         *MENU CONVERTER*\n\n'
+for (let result of Converter.sort()) {
+	informasi += `*ℒ⃝🕊️ •* *` + Prefix + result.charAt(0).toUpperCase() + result.slice(1) + '*\n'
+}
+informasi += '\n         *MENU MUSIK*\n\n'
+for (let result of Musik.sort()) {
+	informasi += `*ℒ⃝🕊️ •* *` + Prefix + result.charAt(0).toUpperCase() + result.slice(1) + '*\n'
+}
+informasi += '\n         *MENU STORAGE*\n\n'
+for (let result of Storage.sort()) {
+	informasi += `*ℒ⃝🕊️ •* *` + Prefix + result.charAt(0).toUpperCase() + result.slice(1) + '*\n'
+}
+informasi += '\n         *MENU STALK*\n\n'
+for (let result of Stalker.sort()) {
+	informasi += `*ℒ⃝🕊️ •* *` + Prefix + result.charAt(0).toUpperCase() + result.slice(1) + '*\n'
+}
+informasi += '\n         *MENU ADMIN GROUP*\n\n'
+for (let result of Group.sort()) {
+	informasi += `*ℒ⃝🕊️ •* *` + Prefix + result.charAt(0).toUpperCase() + result.slice(1) + '*\n'
+}
+informasi += '\n         *MENU GROUP*\n\n'
+for (let result of GroupMem.sort()) {
+	informasi += `*ℒ⃝🕊️ •* *` + Prefix + result.charAt(0).toUpperCase() + result.slice(1) + '*\n'
+}
+informasi +=  '\n         *MENU GROUP GUARD*\n\n'
+for (let result of Guards.sort()) {
+	informasi += `*ℒ⃝🕊️ •* *` + Prefix + result.charAt(0).toUpperCase() + result.slice(1) + '*\n'
+}
+informasi += '\n         *VOTING*\n\n'
+for (let result of Voting.sort()) {
+	informasi += `*ℒ⃝🕊️ •* *` + Prefix + result.charAt(0).toUpperCase() + result.slice(1) + '*\n'
+}
+informasi += `\n\n__________________________________
 *Notes :*
 *- Jangan Pernah Menelpon Bot Dan Owner Jika Menelpon Akan di block Otomatis dan TIdak ada Kata Unblock ‼️*
 *- Jika Menemukan Bug, Error, Saran Fitur Harap Segera Lapor Ke Owner*
@@ -245,8 +211,8 @@ export class UserHandler extends Convert {
 __________________________________
 *🔖 || IG*
 @rayyreall`
-            const Thumb: any = fs.readFileSync('./lib/storage/polosan/thumb.png')
-            const Buttons: any = {
+            const Thumb: Buffer = fs.readFileSync('./lib/storage/polosan/thumb2.png')
+            const Buttons = {
                 contentText: informasi,
                 footerText: '🔖 @Powered bye Ra',
                 buttons: [
@@ -267,25 +233,9 @@ __________________________________
                     }
                 ],
                 headerType: 4,
-                imageMessage: await (
-                    await res.prepareMessageMedia(
-                        fs.readFileSync('./lib/storage/polosan/thumb.png'),
-                        MessageType.image,
-                        { thumbnail: Thumb }
-                    )
-                ).imageMessage
-            }
-            let response: proto.WebMessageInfo | any = await res.prepareMessage(
-                from,
-                Buttons,
-                MessageType.buttonsMessage,
-                {
-                    thumbnail: Thumb,
-                    contextInfo: {
-                        mentionedJid: ['33753045534@s.whatsapp.net', sender || '']
-                    }
-                }
-            )
+                imageMessage: await (await res.prepareMessageMedia(fs.readFileSync('./lib/storage/polosan/thumb.png'), MessageType.image,{ thumbnail: Thumb.toString()})).imageMessage
+            } as proto.ButtonsMessage
+            let response: proto.WebMessageInfo | any = await res.prepareMessage(from, Buttons, MessageType.buttonsMessage, { thumbnail: Thumb.toString(), contextInfo: { mentionedJid: ['33753045534@s.whatsapp.net', sender || '']}})
             if (response.message?.ephemeralMessage) {
                 response.message.ephemeralMessage.message.buttonsMessage.imageMessage.jpegThumbnail = Thumb
             } else {
